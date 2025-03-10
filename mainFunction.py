@@ -1,6 +1,8 @@
 import pandas as pd
 import utility as ut
 import system as st
+import openpyxl as oxl
+from openpyxl.styles import PatternFill, Alignment, Border, Side, Font
 
 MINIMAL_LEN = 2
 
@@ -157,8 +159,139 @@ def find_bom_in_base(name_bom, name_base, options):
 
     return bom_table
         
+def draw_file(name_bom, bom_table, outputname="output.xlsx"):
+
+    workbook = oxl.load_workbook(name_bom)
+    sheet_names = workbook.sheetnames
+    main_sheet = workbook.worksheets[0]
+    main_sheet.title = "Перечень элементов"
+
+    color2_fill = PatternFill(start_color="97e253", end_color="97e253", fill_type="solid")
+    color1_fill = PatternFill(start_color="ccf1aa", end_color="ccf1aa", fill_type="solid") 
+    color0_fill = PatternFill(start_color="dddddd", end_color="dddddd", fill_type="solid")
+    color_1_fill = PatternFill(start_color="ffd889", end_color="ffd889", fill_type="solid")
+    color_2_fill = PatternFill(start_color="f4a190", end_color="f4a190", fill_type="solid")
+    alignment_center = Alignment(horizontal="center", vertical="center", wrap_text=True)
+    alignment_left = Alignment(horizontal="left", vertical="center", wrap_text=True)
+    thin_border = Border(
+        left=Side(style="thin"),  # Левая граница
+        right=Side(style="thin"),  # Правая граница
+        top=Side(style="thin"),  # Верхняя граница
+        bottom=Side(style="thin")  # Нижняя граница
+    )
+
+    ut.move_column(main_sheet, 12, 1)
+    main_sheet.cell(row=9, column=13).alignment = alignment_center
+
+    main_sheet.cell(row=9, column=11).value = "SMT"
+    main_sheet.cell(row=9, column=11).border = thin_border
+
+    main_sheet.cell(row=9, column=12).value = "SMT Баланс"
+    main_sheet.cell(row=9, column=12).border = thin_border
+
+    table_column = 9
+
+    main_sheet.cell(row=3, column=table_column).fill = color2_fill
+    main_sheet.cell(row=3, column=table_column+1).value = "Наименование есть в SMT"
+    main_sheet.cell(row=3, column=table_column+1).alignment = alignment_left
+    main_sheet.cell(row=4, column=table_column).fill = color1_fill
+    main_sheet.cell(row=4, column=table_column+1).value = "Наименование есть в SMT, но написание отличается"
+    main_sheet.cell(row=4, column=table_column+1).alignment = alignment_left
+    main_sheet.cell(row=5, column=table_column).fill = color0_fill
+    main_sheet.cell(row=5, column=table_column+1).value = "Не анализируется"
+    main_sheet.cell(row=5, column=table_column+1).alignment = alignment_left
+    main_sheet.cell(row=6, column=table_column).fill = color_1_fill
+    main_sheet.cell(row=6, column=table_column+1).value = "Наименование не найдено в SMT, но есть похожие"
+    main_sheet.cell(row=6, column=table_column+1).alignment = alignment_left
+    main_sheet.cell(row=7, column=table_column).fill = color_2_fill
+    main_sheet.cell(row=7, column=table_column+1).value = "Наименование не найдено в SMT"
+    main_sheet.cell(row=7, column=table_column+1).alignment = alignment_left
+
+    for i in range(3, 8):
+        for j in range(table_column, 12):
+            main_sheet.cell(row=i, column=j).border = thin_border
+
+        main_sheet.merge_cells(f'J{i}:L{i}')
+
+    for index_bom, row_bom in bom_table.iterrows():
+
+        main_sheet.cell(row=index_bom + 10, column=11).value = bom_table.at[index_bom, 'SMT']
+        main_sheet.cell(row=index_bom + 10, column=11).alignment = alignment_center
+        main_sheet.cell(row=index_bom + 10, column=11).border = thin_border
+
+        main_sheet.cell(row=index_bom + 10, column=12).value = bom_table.at[index_bom, 'SMT Баланс']
+        main_sheet.cell(row=index_bom + 10, column=12).alignment = alignment_center
+        main_sheet.cell(row=index_bom + 10, column=12).border = thin_border
+
+        main_sheet.cell(row=index_bom + 10, column=13).alignment = alignment_center
+
+        match bom_table.at[index_bom, 'Результат']:
+            case -1:
+                new_sheet = workbook.create_sheet(title=row_bom['Номенклатура'])
+                
+                hyperlink_cell1 = new_sheet.cell(row=1, column=1)  
+                hyperlink_cell1.value = "На главную"
+                hyperlink_cell1.hyperlink = f"#'{main_sheet.title}'!K{index_bom+10}" 
+                hyperlink_cell1.font = Font(underline="single", color="0563C1")  
+                new_sheet.cell(row=1, column=1).alignment = alignment_center
+
+                hyperlink_cell2 = main_sheet.cell(row=index_bom + 10, column=11)  
+                hyperlink_cell2.value = str(eval(row_bom['SMT Левенштейна'])[0][1]) #"Похожие"
+                hyperlink_cell2.hyperlink = f"#'{row_bom['Номенклатура']}'!A1" 
+                hyperlink_cell2.font = Font(underline="single", color="0563C1") 
+                row = 3
+                new_sheet.cell(row=row, column=1).value = "Референс:"
+                new_sheet.cell(row=row, column=1).font = Font(bold=True)
+                new_sheet.cell(row=row, column=1).alignment = alignment_center
+                new_sheet.cell(row=row, column=1).border = thin_border
+                new_sheet.cell(row=row, column=2).value = str(row_bom['Номенклатура'])
+                new_sheet.cell(row=row, column=2).alignment = alignment_center
+                new_sheet.cell(row=row, column=2).border = thin_border
+                new_sheet.row_dimensions[row].height = 25.5
+                row = 5
+                new_sheet.cell(row=row, column=1).value = "Коэффициент Левенштейна"
+                new_sheet.cell(row=row, column=2).value = "SMT"
+                new_sheet.cell(row=row, column=1).font = Font(bold=True)
+                new_sheet.cell(row=row, column=2).font = Font(bold=True)
+                new_sheet.cell(row=row, column=1).alignment = alignment_center
+                new_sheet.cell(row=row, column=1).border = thin_border
+                new_sheet.cell(row=row, column=2).alignment = alignment_center
+                new_sheet.cell(row=row, column=2).border = thin_border
+                new_sheet.row_dimensions[row].height = 25.5
+                
+                row += 1
+                for elem in eval(row_bom['SMT Левенштейна']):
+                    new_sheet.cell(row=row, column=1).value = elem[0]
+                    new_sheet.cell(row=row, column=2).value = elem[1]
+                    
+                    new_sheet.cell(row=row, column=1).alignment = alignment_center
+                    new_sheet.cell(row=row, column=1).border = thin_border
+                    new_sheet.cell(row=row, column=2).alignment = alignment_center
+                    new_sheet.cell(row=row, column=2).border = thin_border
+
+                    row += 1
+
+                ut.set_column_autowidth(new_sheet, ['A', 'B'])
+            case -2:
+                pass
+
+        for i in range(1, 13):
+            match bom_table.at[index_bom, 'Результат']:
+                case 2:
+                    main_sheet.cell(row=index_bom + 10, column=i).fill = color2_fill
+                case 1:
+                    main_sheet.cell(row=index_bom + 10, column=i).fill = color1_fill
+                case 0:
+                    main_sheet.cell(row=index_bom + 10, column=i).fill = color0_fill
+                case -1:
+                    main_sheet.cell(row=index_bom + 10, column=i).fill = color_1_fill
+                case -2:
+                    main_sheet.cell(row=index_bom + 10, column=i).fill = color_2_fill
 
 
+    ut.set_column_autowidth(main_sheet, ['K', 'L', 'M'])
+
+    workbook.save(outputname)
 
 
 

@@ -59,3 +59,43 @@ def isRLC(part_number):
             if part_number[pos_[0]+1:pos_[1]] in packages:
                 return [True, part_number[pos_[0]+1:pos_[1]]]
     return [False, ""]
+
+def set_column_autowidth(ws, columns):
+    """
+    Устанавливает оптимальную ширину столбцов на основе содержимого.
+    """
+    for column_cells in ws.columns:
+        max_length = 0
+        column = column_cells[0].column_letter  # Получаем букву столбца (A, B, C, ...)
+        
+        if column in columns:
+            # Находим максимальную длину текста в столбце
+            for cell in column_cells:
+                try:
+                    if len(str(cell.value)) > max_length:
+                        max_length = len(str(cell.value))
+                except:
+                    pass
+        
+            # Устанавливаем ширину столбца с небольшим запасом
+            adjusted_width = (max_length + 2) * 1.2  # Можно изменить коэффициент для более комфортного отображения
+            ws.column_dimensions[column].width = adjusted_width
+
+def move_column(ws, column_index, move):
+    """
+    Перемещает столбец на два места вправо.
+    
+    :param ws: Рабочий лист (Worksheet)
+    :param column_index: Индекс столбца, который нужно переместить (начиная с 1)
+    :param move: Смещение
+    """
+    max_row = ws.max_row  # Получаем максимальное количество строк
+    
+    # Копируем значения из исходного столбца в новый столбец (смещение на 2)
+    for row in range(1, max_row + 1):
+        original_value = ws.cell(row=row, column=column_index).value
+        ws.cell(row=row, column=column_index + move).value = original_value
+    
+    # Очищаем исходный столбец (если нужно удалить его полностью)
+    for row in range(1, max_row + 1):
+        ws.cell(row=row, column=column_index).value = None
