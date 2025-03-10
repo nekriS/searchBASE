@@ -30,7 +30,7 @@
      <string>Открыть</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit">
+   <widget class="QLineEdit" name="linePass1">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -39,8 +39,11 @@
       <height>22</height>
      </rect>
     </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
    </widget>
-   <widget class="QLabel" name="label">
+   <widget class="QLabel" name="datePass1">
     <property name="geometry">
      <rect>
       <x>440</x>
@@ -153,7 +156,7 @@
      <string>База данных SMT (html):</string>
     </property>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_3">
+   <widget class="QLineEdit" name="linePass2">
     <property name="geometry">
      <rect>
       <x>130</x>
@@ -162,8 +165,11 @@
       <height>22</height>
      </rect>
     </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_3">
+   <widget class="QPushButton" name="pushButton2">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -176,7 +182,7 @@
      <string>Открыть</string>
     </property>
    </widget>
-   <widget class="QLabel" name="label_4">
+   <widget class="QLabel" name="datePass2">
     <property name="geometry">
      <rect>
       <x>440</x>

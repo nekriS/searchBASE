@@ -8,38 +8,38 @@ MINIMAL_LEN = 2
 
 class options:
     def __init__(self, 
-                 bom_use_columns = "A, B, C, D, E, F", 
-                 bom_skip_rows = 8,
-                 bom_pn_number = 3,
-                 bom_type_number = 5,
-                 save_bom2excel = False,
-                 name_bom2excel = "bom.xlsx",
-                 base_table_number = 1,
-                 base_pn_number = 3,
-                 base_drop_column = [11, 10, 9, 8, 4, 3, 2, 0, 1],
-                 base_balance_number = 2,
-                 base_1c_number = 3,
-                 base_comm_number = 1,
-                 save_base2excel = False,
-                 name_base2excel = "base.xlsx",
-                 compare_method = "normal",
-                 quiet_mode = False):
-        self.bom_use_columns = bom_use_columns # необходимые столбцы из перечня компонентов
-        self.bom_skip_rows = bom_skip_rows # сколько строк при анализе необходимо удалить
-        self.bom_pn_number = bom_pn_number # номер столбца, в котором находится парт номер
-        self.bom_type_number = bom_type_number # номер столбца, в котором находится тип монтажа
-        self.save_bom2excel = save_bom2excel # 
-        self.name_bom2excel = name_bom2excel # 
-        self.base_table_number = base_table_number # номер таблицы из базы
-        self.base_pn_number = base_pn_number # номер столбца, в котором находится парт номер
-        self.base_drop_column = base_drop_column # номера столбцов, которые необходимо выкинуть
-        self.base_balance_number = base_balance_number # 
-        self.base_1c_number = base_1c_number # 
-        self.base_comm_number = base_comm_number # 
-        self.save_base2excel = save_base2excel # сохранить ли базу в эксель
-        self.name_base2excel = name_base2excel # название для базы при сохранении в эксель
-        self.compare_method = compare_method # тип сравнения нормальный (с порогами) или с помощью нейронной сети
-        self.quiet_mode = quiet_mode # включает тихий режим (отключает сообщения отладки)
+                 bom_use_columns = "A, B, C, D, E, F", # необходимые столбцы из перечня компонентов
+                 bom_skip_rows = 8, # сколько строк при анализе необходимо удалить
+                 bom_pn_number = 3, # номер столбца, в котором находится парт номер
+                 bom_type_number = 5, # номер столбца, в котором находится тип монтажа
+                 save_bom2excel = False, # 
+                 name_bom2excel = "bom.xlsx", # 
+                 base_table_number = 1, # номер таблицы из базы
+                 base_pn_number = 3, # номер столбца, в котором находится парт номер
+                 base_drop_column = [11, 10, 9, 8, 4, 3, 2, 0, 1], # номера столбцов, которые необходимо выкинуть
+                 base_balance_number = 2, # 
+                 base_1c_number = 3, # 
+                 base_comm_number = 1, # 
+                 save_base2excel = False, # сохранить ли базу в эксель
+                 name_base2excel = "base.xlsx", # название для базы при сохранении в эксель
+                 compare_method = "normal", # тип сравнения нормальный (с порогами) или с помощью нейронной сети
+                 quiet_mode = False): # включает тихий режим (отключает сообщения отладки)
+        self.bom_use_columns = bom_use_columns 
+        self.bom_skip_rows = bom_skip_rows 
+        self.bom_pn_number = bom_pn_number 
+        self.bom_type_number = bom_type_number
+        self.save_bom2excel = save_bom2excel
+        self.name_bom2excel = name_bom2excel
+        self.base_table_number = base_table_number
+        self.base_pn_number = base_pn_number
+        self.base_drop_column = base_drop_column
+        self.base_balance_number = base_balance_number
+        self.base_1c_number = base_1c_number 
+        self.base_comm_number = base_comm_number 
+        self.save_base2excel = save_base2excel
+        self.name_base2excel = name_base2excel
+        self.compare_method = compare_method
+        self.quiet_mode = quiet_mode
 
 
 
@@ -293,11 +293,6 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx"):
 
     workbook.save(outputname)
 
-
-
-
-
-
 if __name__ == "__main__":
 
     name_bom = ""
@@ -305,3 +300,4 @@ if __name__ == "__main__":
     options_1 = options()
 
     bom_table = find_bom_in_base(name_bom, name_base, options_1)
+    draw_file(name_bom, bom_table)
