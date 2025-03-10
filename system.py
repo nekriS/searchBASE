@@ -1,7 +1,7 @@
 import os
 import datetime
 
-def log(text, log_object):
+def log(text, log_object=-1):
     # Получаем сегодняшнюю дату в формате YYYY-MM-DD
     today_date = datetime.datetime.now().strftime('%Y-%m-%d')
 
