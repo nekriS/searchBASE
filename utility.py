@@ -60,7 +60,7 @@ def isRLC(part_number):
                 return [True, part_number[pos_[0]+1:pos_[1]]]
     return [False, ""]
 
-def set_column_autowidth(ws, columns):
+def set_column_autowidth(ws, columns, reserve=1.2):
     """
     Устанавливает оптимальную ширину столбцов на основе содержимого.
     """
@@ -78,10 +78,10 @@ def set_column_autowidth(ws, columns):
                     pass
         
             # Устанавливаем ширину столбца с небольшим запасом
-            adjusted_width = (max_length + 2) * 1.2  # Можно изменить коэффициент для более комфортного отображения
+            adjusted_width = (max_length + 2) * reserve  # Можно изменить коэффициент для более комфортного отображения
             ws.column_dimensions[column].width = adjusted_width
 
-def move_column(ws, column_index, move):
+def move_column(ws, column_index, move, skip=0):
     """
     Перемещает столбец на move вправо.
     
@@ -91,11 +91,11 @@ def move_column(ws, column_index, move):
     """
     max_row = ws.max_row  # Получаем максимальное количество строк
     
-    # Копируем значения из исходного столбца в новый столбец (смещение на 2)
-    for row in range(1, max_row + 1):
+    # Копируем значения из исходного столбца в новый столбец
+    for row in range(1+skip, max_row + 1):
         original_value = ws.cell(row=row, column=column_index).value
         ws.cell(row=row, column=column_index + move).value = original_value
     
-    # Очищаем исходный столбец (если нужно удалить его полностью)
-    for row in range(1, max_row + 1):
+    # Очищаем исходный столбец
+    for row in range(1+skip, max_row + 1):
         ws.cell(row=row, column=column_index).value = None

@@ -36,24 +36,25 @@ def resource_path(relative_path):
 class Worker(QThread):
     # Определяем сигнал, который будем использовать для передачи данных в основной поток
     update_text_signal = Signal(str)
+    update_bar_signal = Signal(int)
 
-    def __init__(self, input_file, base_file, output_file, parent=None):
+    def __init__(self, input_file, base_file, output_file, open_file, options_, parent=None):
         super().__init__(parent)
         self.input_file = input_file
         self.base_file = base_file
         self.output_file = output_file
+        self.open_file = open_file
+        self.options_ = options_
 
     def run(self):
         """Этот метод выполняется в отдельном потоке"""
 
 
+        self.options_.log_object = self
 
-        options = mf.options()
-        options.save_bom2excel = False
-        options.log_object = self
 
-        bom_table = mf.find_bom_in_base(self.input_file, self.base_file, options)
-        mf.draw_file(self.input_file, bom_table, self.output_file, True)
+        bom_table = mf.find_bom_in_base(self.input_file, self.base_file, self.options_)
+        mf.draw_file(self.input_file, bom_table, self.output_file, self.open_file, self.options_.log_object)
 
         #for i in range(5):
         #    time.sleep(1)  # имитация долгой операции
@@ -128,15 +129,29 @@ class MainWindow(QMainWindow):
         input_file = self.ui.linePass1.text()
         base_file = self.ui.linePass2.text()
         output_file = self.ui.nameOutput.text()
+        open_file = self.ui.openfile.isChecked()
 
-        self.worker = Worker(input_file, base_file, output_file)
+        options = mf.options()
+        options.save_bom2excel = False
+
+        options.check_hand = self.ui.checkhand.isChecked()
+        options.check_nm = self.ui.checknm.isChecked()
+
+
+        self.ui.progressBar.setValue(0)
+        self.worker = Worker(input_file, base_file, output_file, open_file, options)
         self.worker.update_text_signal.connect(self.append_text)
+        self.worker.update_bar_signal.connect(self.append_progress)
         self.worker.start()
 
     def append_text(self, text):
-            """Метод вызывается из потока через сигнал и добавляет текст в QTextEdit"""
-            self.ui.logblock.append(text)
 
+        self.ui.logblock.append(text)
+
+    def append_progress(self, num):
+
+        self.ui.progressBar.setValue(num)
+        #self.ui.progressBar.append(text)
         #print(input_file, base_file, output_file)
 
 

@@ -27,6 +27,8 @@ class options:
                  name_base2excel = "base.xlsx", # название для базы при сохранении в эксель
                  compare_method = "normal", # тип сравнения нормальный (с порогами) или с помощью нейронной сети
                  quiet_mode = False, # включает тихий режим (отключает сообщения отладки)
+                 check_hand = False,
+                 check_nm = False,
                  log_object = -1):
         self.bom_use_columns = bom_use_columns 
         self.bom_skip_rows = bom_skip_rows 
@@ -44,16 +46,18 @@ class options:
         self.name_base2excel = name_base2excel
         self.compare_method = compare_method
         self.quiet_mode = quiet_mode
+        self.check_hand = check_hand
+        self.check_nm = check_nm
         self.log_object = log_object
 
 
 
 def find_bom_in_base(name_bom, name_base, options):
 
-    st.log("The process has begun.", options.log_object)
+    st.log("The process find in BOM has begun.", options.log_object)
     start_time = datetime.datetime.now()
     params = ', '.join(f"{k}={repr(v)}" for k, v in vars(options).items())
-    st.log("Options: " + params, options.log_object)
+    st.log(f"Options: name_bom={name_bom}, name_base={name_base}, {params}", options.log_object)
 
     
     bom_table = pd.read_excel(name_bom, usecols=options.bom_use_columns, skiprows=options.bom_skip_rows)
@@ -83,6 +87,7 @@ def find_bom_in_base(name_bom, name_base, options):
     bom_table['SMT Жаккара'] = ""
     bom_table['SMT Левенштейна'] = ""
     bom_table['Результат'] = 0
+    i = 0
 
     for index_bom, row_bom in bom_table.iterrows():
         
@@ -99,8 +104,11 @@ def find_bom_in_base(name_bom, name_base, options):
         components_Lev = []
         components_Jac = []
         components_All = []
-
-        if (len(type_part) > MINIMAL_LEN) and (len(str1) > MINIMAL_LEN):
+        if type_part == "HAND" and not(options.check_hand):
+            continue
+        if type_part == "NM" and not(options.check_nm):
+            continue
+        if (len(type_part) > 1) and (len(str1) > MINIMAL_LEN):
             for index_base, row_base in base_table.iterrows():
 
                 balance = row_base[name_balance]
@@ -170,6 +178,9 @@ def find_bom_in_base(name_bom, name_base, options):
             bom_table.at[index_bom, 'SMT'] = name_in_base
             bom_table.at[index_bom, 'Результат'] = result
             bom_table.at[index_bom, 'SMT Баланс'] = balance
+        i += 1
+        proc = i / (len(bom_table) + 1) * 100
+        options.log_object.update_bar_signal.emit(proc)
 
         if not(options.quiet_mode):
             if str1 != "" and str1 != " ":
@@ -187,10 +198,14 @@ def find_bom_in_base(name_bom, name_base, options):
         
 
 
-def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False):
+def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False, log_object=-1):
+
+    st.log("The process draw file has begun.", log_object)
+    st.log(f"Options: name_bom={name_bom}, output_name={outputname}, open_file={open_file}", log_object)
+    start_time = datetime.datetime.now()
 
     workbook = oxl.load_workbook(name_bom)
-    sheet_names = workbook.sheetnames
+    #sheet_names = workbook.sheetnames
     main_sheet = workbook.worksheets[0]
     main_sheet.title = "Перечень элементов"
 
@@ -209,6 +224,15 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False):
     )
 
     ut.move_column(main_sheet, 12, 1)
+    ut.move_column(main_sheet, 4, 50, skip=7)
+    ut.move_column(main_sheet, 5, -1, skip=7)
+    ut.move_column(main_sheet, 6, -1, skip=7)
+    ut.move_column(main_sheet, 7, -1, skip=7)
+    ut.move_column(main_sheet, 8, -1, skip=7)
+    ut.move_column(main_sheet, 9, -1, skip=7)
+    ut.move_column(main_sheet, 10, -1, skip=7)
+    ut.move_column(main_sheet, 54, -44, skip=7)
+
     main_sheet.cell(row=9, column=13).alignment = alignment_center
 
     main_sheet.cell(row=9, column=11).value = "SMT"
@@ -317,8 +341,17 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False):
                     main_sheet.cell(row=index_bom + 10, column=i).fill = color_2_fill
 
 
-
-    ut.set_column_autowidth(main_sheet, ['K', 'L', 'M'])
+    #ut.set_column_autowidth(main_sheet, ['D'])
+    #ut.set_column_autowidth(main_sheet, ['D', 'E', 'F', 'H', 'I', 'J', 'K', 'L', 'M'])
+    #ut.set_column_autowidth(main_sheet, ['G'], 0.8)
+    #main_sheet.column_dimensions['G'].width = 207
+    main_sheet.column_dimensions['E'].width = main_sheet.column_dimensions['F'].width
+    main_sheet.column_dimensions['F'].width = main_sheet.column_dimensions['G'].width
+    main_sheet.column_dimensions['G'].width = main_sheet.column_dimensions['H'].width
+    main_sheet.column_dimensions['H'].width = main_sheet.column_dimensions['I'].width
+    main_sheet.column_dimensions['I'].width = main_sheet.column_dimensions['J'].width
+    ut.set_column_autowidth(main_sheet, ['J', 'D', 'K', 'L', 'M'])
+    main_sheet.column_dimensions['J'].width = main_sheet.column_dimensions['K'].width
 
     outputname = st.get_name_file(outputname)
 
@@ -327,8 +360,13 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False):
         try:
             os.startfile(outputname)
         except:
-            pass
-            #log("Не удалось открыть полученный файл!", log_object)
+            st.log(f"The file cannot be opened. It may be busy! File: {outputname}", log_object)
+
+
+    end_time = datetime.datetime.now()
+    deltatime_str = st.get_time_difference(start_time, end_time)
+    st.log(f"The draw file has been generated! Lead time: {deltatime_str}", log_object)
+    log_object.update_bar_signal.emit(100)
 
 
 if __name__ == "__main__":

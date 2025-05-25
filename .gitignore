@@ -6,6 +6,7 @@ log/
 *.xls
 *.html
 *.htm
+*.txt
 *.xlsx
 .qtcreator/
 /.qtcreator
