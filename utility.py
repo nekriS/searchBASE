@@ -83,7 +83,7 @@ def set_column_autowidth(ws, columns):
 
 def move_column(ws, column_index, move):
     """
-    Перемещает столбец на два места вправо.
+    Перемещает столбец на move вправо.
     
     :param ws: Рабочий лист (Worksheet)
     :param column_index: Индекс столбца, который нужно переместить (начиная с 1)
