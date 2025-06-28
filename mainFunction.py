@@ -17,7 +17,7 @@ class options:
                  bom_type_number = 5, # номер столбца, в котором находится тип монтажа
                  save_bom2excel = False, # 
                  name_bom2excel = "bom.xlsx", # 
-                 base_table_number = 1, # номер таблицы из базы
+                 base_table_number = 2, # номер таблицы из базы
                  base_pn_number = 0, # номер столбца, в котором находится парт номер
                  base_drop_column = [11, 10, 9, 8, 4, 3, 2], # номера столбцов, которые необходимо выкинуть
                  base_balance_number = 2, # 
@@ -345,12 +345,13 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False, lo
     #ut.set_column_autowidth(main_sheet, ['D', 'E', 'F', 'H', 'I', 'J', 'K', 'L', 'M'])
     #ut.set_column_autowidth(main_sheet, ['G'], 0.8)
     #main_sheet.column_dimensions['G'].width = 207
-    main_sheet.column_dimensions['E'].width = main_sheet.column_dimensions['F'].width
+    #main_sheet.column_dimensions['E'].width = main_sheet.column_dimensions['F'].width
     main_sheet.column_dimensions['F'].width = main_sheet.column_dimensions['G'].width
     main_sheet.column_dimensions['G'].width = main_sheet.column_dimensions['H'].width
     main_sheet.column_dimensions['H'].width = main_sheet.column_dimensions['I'].width
     main_sheet.column_dimensions['I'].width = main_sheet.column_dimensions['J'].width
-    ut.set_column_autowidth(main_sheet, ['J', 'D', 'K', 'L', 'M'])
+    ut.set_column_autowidth(main_sheet, ['J', 'D', 'L', 'M'])
+    ut.set_column_autowidth(main_sheet, ['K'], 1.1)
     main_sheet.column_dimensions['J'].width = main_sheet.column_dimensions['K'].width
 
     outputname = st.get_name_file(outputname)
