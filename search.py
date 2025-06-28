@@ -16,6 +16,7 @@ def search(name_base, search_line, options):
     header_base = base_table.columns.tolist()
     #for i_column in options.base_drop_column:
     #    base_table = base_table.drop(columns=[header_base[i_column]])
+    base_table = base_table.fillna("")
 
     output_table = pd.DataFrame()
     i = 1
@@ -23,9 +24,12 @@ def search(name_base, search_line, options):
     last_proc = 0
 
     for index, row in base_table.iterrows():
+        if not(options.log_object._is_running):
+            break
+
         i += 1
         #if search_line in row['Component']:
-        if fnmatch.fnmatch(row['Component'], f"{search_line}*"):
+        if fnmatch.fnmatch(row['Component'], f"*{search_line}*") or fnmatch.fnmatch(row['Comment'], f"*{search_line}*") or fnmatch.fnmatch(row[header_base[6]], f"*{search_line}*"):
             #print(index)
             output_table = output_table._append(row, ignore_index=True)
 
@@ -41,6 +45,8 @@ def search(name_base, search_line, options):
 
         if j == 100:
             break
+
+        
 
             #time.sleep(1)
     options.log_object.update_bar_signal.emit(100)

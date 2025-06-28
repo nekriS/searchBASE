@@ -16,29 +16,31 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QApplication, QCheckBox, QGridLayout, QGroupBox,
-    QHeaderView, QLabel, QLayout, QLineEdit,
-    QMainWindow, QMenu, QMenuBar, QProgressBar,
-    QPushButton, QSizePolicy, QSpacerItem, QTabWidget,
-    QTableView, QTextEdit, QToolButton, QVBoxLayout,
-    QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QGridLayout,
+    QGroupBox, QHeaderView, QLabel, QLayout,
+    QLineEdit, QMainWindow, QMenu, QMenuBar,
+    QProgressBar, QPushButton, QSizePolicy, QSpacerItem,
+    QTabWidget, QTableView, QTextEdit, QToolButton,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.setWindowModality(Qt.NonModal)
-        MainWindow.resize(881, 825)
+        MainWindow.resize(881, 670)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setMinimumSize(QSize(817, 572))
+        MainWindow.setMinimumSize(QSize(817, 670))
         MainWindow.setMaximumSize(QSize(16777215, 16777215))
-        icon = QIcon(QIcon.fromTheme(u"face-sick"))
+        icon = QIcon()
+        icon.addFile(u"icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setWindowOpacity(1.000000000000000)
+        MainWindow.setIconSize(QSize(50, 50))
         MainWindow.setDockOptions(QMainWindow.AllowTabbedDocks|QMainWindow.AnimatedDocks)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
@@ -114,18 +116,9 @@ class Ui_MainWindow(object):
         self.tabWidget.setUsesScrollButtons(True)
         self.tab_3 = QWidget()
         self.tab_3.setObjectName(u"tab_3")
-        self.verticalLayout_3 = QVBoxLayout(self.tab_3)
-        self.verticalLayout_3.setSpacing(10)
-        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
-        self.verticalLayout_3.setContentsMargins(20, 30, 20, 20)
-        self.label = QLabel(self.tab_3)
-        self.label.setObjectName(u"label")
-        font = QFont()
-        font.setWeight(QFont.Medium)
-        self.label.setFont(font)
-
-        self.verticalLayout_3.addWidget(self.label)
-
+        self.gridLayout_2 = QGridLayout(self.tab_3)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.gridLayout_2.setHorizontalSpacing(6)
         self.lineSearch = QLineEdit(self.tab_3)
         self.lineSearch.setObjectName(u"lineSearch")
         sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
@@ -134,12 +127,12 @@ class Ui_MainWindow(object):
         sizePolicy2.setHeightForWidth(self.lineSearch.sizePolicy().hasHeightForWidth())
         self.lineSearch.setSizePolicy(sizePolicy2)
         self.lineSearch.setMinimumSize(QSize(0, 60))
-        font1 = QFont()
-        font1.setFamilies([u"GOST type B"])
-        font1.setPointSize(14)
-        font1.setBold(False)
-        font1.setKerning(True)
-        self.lineSearch.setFont(font1)
+        font = QFont()
+        font.setFamilies([u"GOST type B"])
+        font.setPointSize(14)
+        font.setBold(False)
+        font.setKerning(True)
+        self.lineSearch.setFont(font)
         self.lineSearch.setStyleSheet(u"margin-top: 10px;\n"
 "margin-bottom: 10px;\n"
 "padding-left: 15px;\n"
@@ -151,23 +144,60 @@ class Ui_MainWindow(object):
 "\n"
 "")
 
-        self.verticalLayout_3.addWidget(self.lineSearch)
+        self.gridLayout_2.addWidget(self.lineSearch, 1, 1, 1, 1)
 
         self.search = QPushButton(self.tab_3)
         self.search.setObjectName(u"search")
+        self.search.setMinimumSize(QSize(100, 60))
+        self.search.setStyleSheet(u"QPushButton {\n"
+"margin-top: 10px;\n"
+"margin-bottom: 10px;\n"
+"padding-bottom: 1px;\n"
+"vertical-align: middle;\n"
+"border-radius: 20;\n"
+"border: 1px solid gray;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"background-color: #e3e3e3;\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"background-color: white;\n"
+"}\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"")
 
-        self.verticalLayout_3.addWidget(self.search)
+        self.gridLayout_2.addWidget(self.search, 1, 0, 1, 1)
 
         self.groupBox = QGroupBox(self.tab_3)
         self.groupBox.setObjectName(u"groupBox")
         self.groupBox.setMinimumSize(QSize(0, 100))
 
-        self.verticalLayout_3.addWidget(self.groupBox)
+        self.gridLayout_2.addWidget(self.groupBox, 3, 0, 1, 3)
+
+        self.label = QLabel(self.tab_3)
+        self.label.setObjectName(u"label")
+        font1 = QFont()
+        font1.setWeight(QFont.Medium)
+        self.label.setFont(font1)
+
+        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 2)
 
         self.tableView = QTableView(self.tab_3)
         self.tableView.setObjectName(u"tableView")
+        self.tableView.setEditTriggers(QAbstractItemView.AnyKeyPressed|QAbstractItemView.CurrentChanged|QAbstractItemView.DoubleClicked|QAbstractItemView.EditKeyPressed)
+        self.tableView.setDefaultDropAction(Qt.CopyAction)
+        self.tableView.setAlternatingRowColors(False)
+        self.tableView.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.tableView.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
 
-        self.verticalLayout_3.addWidget(self.tableView)
+        self.gridLayout_2.addWidget(self.tableView, 4, 0, 1, 3)
 
         self.tabWidget.addTab(self.tab_3, "")
         self.tab_2 = QWidget()
@@ -313,10 +343,10 @@ class Ui_MainWindow(object):
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"\u0411\u0430\u0437\u0430 \u0434\u0430\u043d\u043d\u044b\u0445 (html):", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"\u0414\u0430\u0442\u0430 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f:", None))
         self.datePass2.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b \u043d\u0435 \u043e\u0442\u043a\u0440\u044b\u0442", None))
-        self.label.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u043f\u0440\u043e\u0441:", None))
         self.lineSearch.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u0422\u0435\u043a\u0441\u0442 \u0437\u0430\u043f\u0440\u043e\u0441\u0430", None))
-        self.search.setText(QCoreApplication.translate("MainWindow", u"PushButton", None))
+        self.search.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a", None))
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u043f\u043e\u0438\u0441\u043a\u0430", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u043f\u0440\u043e\u0441:", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a \u0432 \u0431\u0430\u0437\u0435", None))
         self.nameOutput.setText(QCoreApplication.translate("MainWindow", u"output_bom", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u0414\u0430\u0442\u0430 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f:", None))

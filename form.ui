@@ -10,7 +10,7 @@
     <x>0</x>
     <y>0</y>
     <width>881</width>
-    <height>825</height>
+    <height>670</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -22,7 +22,7 @@
   <property name="minimumSize">
    <size>
     <width>817</width>
-    <height>572</height>
+    <height>670</height>
    </size>
   </property>
   <property name="maximumSize">
@@ -35,10 +35,17 @@
    <string>MainWindow</string>
   </property>
   <property name="windowIcon">
-   <iconset theme="face-sick"/>
+   <iconset>
+    <normaloff>icon.png</normaloff>icon.png</iconset>
   </property>
   <property name="windowOpacity">
    <double>1.000000000000000</double>
+  </property>
+  <property name="iconSize">
+   <size>
+    <width>50</width>
+    <height>50</height>
+   </size>
   </property>
   <property name="dockOptions">
    <set>QMainWindow::AllowTabbedDocks|QMainWindow::AnimatedDocks</set>
@@ -212,35 +219,11 @@
        <attribute name="title">
         <string>Поиск в базе</string>
        </attribute>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <property name="spacing">
-         <number>10</number>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <property name="horizontalSpacing">
+         <number>6</number>
         </property>
-        <property name="leftMargin">
-         <number>20</number>
-        </property>
-        <property name="topMargin">
-         <number>30</number>
-        </property>
-        <property name="rightMargin">
-         <number>20</number>
-        </property>
-        <property name="bottomMargin">
-         <number>20</number>
-        </property>
-        <item>
-         <widget class="QLabel" name="label">
-          <property name="font">
-           <font>
-            <fontweight>Medium</fontweight>
-           </font>
-          </property>
-          <property name="text">
-           <string>Запрос:</string>
-          </property>
-         </widget>
-        </item>
-        <item>
+        <item row="1" column="1">
          <widget class="QLineEdit" name="lineSearch">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
@@ -279,14 +262,45 @@ border: 1px solid gray;
           </property>
          </widget>
         </item>
-        <item>
+        <item row="1" column="0">
          <widget class="QPushButton" name="search">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>60</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">QPushButton {
+margin-top: 10px;
+margin-bottom: 10px;
+padding-bottom: 1px;
+vertical-align: middle;
+border-radius: 20;
+border: 1px solid gray;
+}
+
+QPushButton:hover {
+background-color: #e3e3e3;
+}
+
+QPushButton:pressed {
+background-color: white;
+}
+
+
+
+
+
+
+</string>
+          </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>Поиск</string>
           </property>
          </widget>
         </item>
-        <item>
+        <item row="3" column="0" colspan="3">
          <widget class="QGroupBox" name="groupBox">
           <property name="minimumSize">
            <size>
@@ -299,8 +313,36 @@ border: 1px solid gray;
           </property>
          </widget>
         </item>
-        <item>
-         <widget class="QTableView" name="tableView"/>
+        <item row="0" column="0" colspan="2">
+         <widget class="QLabel" name="label">
+          <property name="font">
+           <font>
+            <fontweight>Medium</fontweight>
+           </font>
+          </property>
+          <property name="text">
+           <string>Запрос:</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0" colspan="3">
+         <widget class="QTableView" name="tableView">
+          <property name="editTriggers">
+           <set>QAbstractItemView::AnyKeyPressed|QAbstractItemView::CurrentChanged|QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed</set>
+          </property>
+          <property name="defaultDropAction">
+           <enum>Qt::CopyAction</enum>
+          </property>
+          <property name="alternatingRowColors">
+           <bool>false</bool>
+          </property>
+          <property name="verticalScrollMode">
+           <enum>QAbstractItemView::ScrollPerPixel</enum>
+          </property>
+          <property name="horizontalScrollMode">
+           <enum>QAbstractItemView::ScrollPerPixel</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>

@@ -90,6 +90,7 @@ class Worker(QThread):
         self.open_file = open_file
         self.options_ = options_
 
+
     def run(self):
         """Этот метод выполняется в отдельном потоке"""
 
@@ -109,6 +110,7 @@ class WorkerSearch(QThread):
         self.search_line = search_line
         self.base_file = base_file
         self.options_ = options_
+        self._is_running = True
 
     def run(self):
         """Этот метод выполняется в отдельном потоке"""
@@ -123,6 +125,9 @@ class WorkerSearch(QThread):
         #self.ui.tableView.setModel(model)
         #self.ui.tableView.resizeColumnsToContents()
 
+    def stop(self):
+        self._is_running = False
+
 
 class MainWindow(QMainWindow):
     def __init__(self, parent=None):
@@ -136,7 +141,7 @@ class MainWindow(QMainWindow):
         self.ui.checkButton.clicked.connect(self.checkButton_clicked)
         self.ui.search.clicked.connect(self.search_button_clicked)
 
-        self.setWindowTitle("checkBOM " + VERSION)
+        self.setWindowTitle("searchBASE " + VERSION)
 
         try:
             file_path = "SMT-iLogic.html"
@@ -156,6 +161,11 @@ class MainWindow(QMainWindow):
 
         search_line = self.ui.lineSearch.text()
         base_file = self.ui.linePass2.text()
+
+        try:
+            self.worker.stop()
+        except:
+            pass
 
         self.worker = WorkerSearch(search_line, base_file, options)
         self.worker.update_text_signal.connect(self.append_text)
