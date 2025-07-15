@@ -6,6 +6,8 @@ build/
 /build
 log/
 /log
+data/
+/data
 *.xls
 *.html
 *.htm
