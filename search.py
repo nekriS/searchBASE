@@ -5,13 +5,13 @@ import fnmatch
 from mainwindow import PandasModel 
 import time
 
-def search(name_base, search_line, options):
+def search(name_base, search_line, options, preset_base='BASE_DEFAULT'):
 
     print(name_base)
     print(search_line)
     
     start_time = dt.datetime.now()
-    base_table = pd.read_html(name_base, encoding='cp1251')[options.base_table_number]
+    base_table = pd.read_html(name_base, encoding='cp1251')[int(options.config[preset_base]['base_table_number'])]
 
     header_base = base_table.columns.tolist()
     #for i_column in options.base_drop_column:

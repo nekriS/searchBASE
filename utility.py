@@ -1,7 +1,6 @@
 
 import Levenshtein
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
 
 def jaccard_similarity(vec1, vec2):
     intersection = sum([min(a, b) for a, b in zip(vec1, vec2)])
@@ -19,9 +18,12 @@ def compare(str1="", str2="", method="content", replace_list=[["NPO", "NP0"]], i
             distance = Levenshtein.distance(str1, str2)
             similarity = 1 - Levenshtein.distance(str1, str2) / max(len(str1), len(str2))
         case 'Jacquard':
-            vectorizer = CountVectorizer().fit_transform([str1, str2])
-            vectors = vectorizer.toarray()
-            similarity = jaccard_similarity(vectors[0], vectors[1])
+            try:
+                vectorizer = CountVectorizer().fit_transform([str1, str2])
+                vectors = vectorizer.toarray()
+                similarity = jaccard_similarity(vectors[0], vectors[1])
+            except:
+                similarity = 0
         case 'content':
             if len(str2) < ignore_len:
                 return 0

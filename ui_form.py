@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.8.2
+## Created by: Qt User Interface Compiler version 6.9.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -16,12 +16,12 @@ from PySide6.QtGui import (QAction, QBrush, QColor, QConicalGradient,
     QIcon, QImage, QKeySequence, QLinearGradient,
     QPainter, QPalette, QPixmap, QRadialGradient,
     QTransform)
-from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QGridLayout,
-    QGroupBox, QHeaderView, QLabel, QLayout,
-    QLineEdit, QMainWindow, QMenu, QMenuBar,
-    QProgressBar, QPushButton, QSizePolicy, QSpacerItem,
-    QTabWidget, QTableView, QTextEdit, QToolButton,
-    QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox, QComboBox,
+    QGridLayout, QGroupBox, QHeaderView, QLabel,
+    QLayout, QLineEdit, QMainWindow, QMenu,
+    QMenuBar, QProgressBar, QPushButton, QSizePolicy,
+    QSpacerItem, QTabWidget, QTableView, QTextEdit,
+    QToolButton, QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -42,6 +42,10 @@ class Ui_MainWindow(object):
         MainWindow.setWindowOpacity(1.000000000000000)
         MainWindow.setIconSize(QSize(50, 50))
         MainWindow.setDockOptions(QMainWindow.AllowTabbedDocks|QMainWindow.AnimatedDocks)
+        self.action = QAction(MainWindow)
+        self.action.setObjectName(u"action")
+        icon1 = QIcon(QIcon.fromTheme(u"help-about"))
+        self.action.setIcon(icon1)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
@@ -119,6 +123,30 @@ class Ui_MainWindow(object):
         self.gridLayout_2 = QGridLayout(self.tab_3)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
         self.gridLayout_2.setHorizontalSpacing(6)
+        self.groupBox = QGroupBox(self.tab_3)
+        self.groupBox.setObjectName(u"groupBox")
+        self.groupBox.setMinimumSize(QSize(0, 100))
+
+        self.gridLayout_2.addWidget(self.groupBox, 3, 0, 1, 3)
+
+        self.tableView = QTableView(self.tab_3)
+        self.tableView.setObjectName(u"tableView")
+        self.tableView.setEditTriggers(QAbstractItemView.AnyKeyPressed|QAbstractItemView.CurrentChanged|QAbstractItemView.DoubleClicked|QAbstractItemView.EditKeyPressed)
+        self.tableView.setDefaultDropAction(Qt.CopyAction)
+        self.tableView.setAlternatingRowColors(False)
+        self.tableView.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.tableView.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
+
+        self.gridLayout_2.addWidget(self.tableView, 4, 0, 1, 3)
+
+        self.label = QLabel(self.tab_3)
+        self.label.setObjectName(u"label")
+        font = QFont()
+        font.setWeight(QFont.Medium)
+        self.label.setFont(font)
+
+        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 2)
+
         self.lineSearch = QLineEdit(self.tab_3)
         self.lineSearch.setObjectName(u"lineSearch")
         sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Fixed)
@@ -127,12 +155,12 @@ class Ui_MainWindow(object):
         sizePolicy2.setHeightForWidth(self.lineSearch.sizePolicy().hasHeightForWidth())
         self.lineSearch.setSizePolicy(sizePolicy2)
         self.lineSearch.setMinimumSize(QSize(0, 60))
-        font = QFont()
-        font.setFamilies([u"GOST type B"])
-        font.setPointSize(14)
-        font.setBold(False)
-        font.setKerning(True)
-        self.lineSearch.setFont(font)
+        font1 = QFont()
+        font1.setFamilies([u"GOST type B"])
+        font1.setPointSize(14)
+        font1.setBold(False)
+        font1.setKerning(True)
+        self.lineSearch.setFont(font1)
         self.lineSearch.setStyleSheet(u"margin-top: 10px;\n"
 "margin-bottom: 10px;\n"
 "padding-left: 15px;\n"
@@ -175,29 +203,34 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.search, 1, 0, 1, 1)
 
-        self.groupBox = QGroupBox(self.tab_3)
-        self.groupBox.setObjectName(u"groupBox")
-        self.groupBox.setMinimumSize(QSize(0, 100))
+        self.search_stop = QPushButton(self.tab_3)
+        self.search_stop.setObjectName(u"search_stop")
+        self.search_stop.setMinimumSize(QSize(40, 60))
+        self.search_stop.setStyleSheet(u"QPushButton {\n"
+"margin-top: 10px;\n"
+"margin-bottom: 10px;\n"
+"padding-bottom: 1px;\n"
+"vertical-align: middle;\n"
+"border-radius: 20;\n"
+"border: 1px solid gray;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"background-color: rgb(255, 143, 145);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"background-color: white;\n"
+"}\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"\n"
+"")
 
-        self.gridLayout_2.addWidget(self.groupBox, 3, 0, 1, 3)
-
-        self.label = QLabel(self.tab_3)
-        self.label.setObjectName(u"label")
-        font1 = QFont()
-        font1.setWeight(QFont.Medium)
-        self.label.setFont(font1)
-
-        self.gridLayout_2.addWidget(self.label, 0, 0, 1, 2)
-
-        self.tableView = QTableView(self.tab_3)
-        self.tableView.setObjectName(u"tableView")
-        self.tableView.setEditTriggers(QAbstractItemView.AnyKeyPressed|QAbstractItemView.CurrentChanged|QAbstractItemView.DoubleClicked|QAbstractItemView.EditKeyPressed)
-        self.tableView.setDefaultDropAction(Qt.CopyAction)
-        self.tableView.setAlternatingRowColors(False)
-        self.tableView.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
-        self.tableView.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
-
-        self.gridLayout_2.addWidget(self.tableView, 4, 0, 1, 3)
+        self.gridLayout_2.addWidget(self.search_stop, 1, 2, 1, 1)
 
         self.tabWidget.addTab(self.tab_3, "")
         self.tab_2 = QWidget()
@@ -206,33 +239,10 @@ class Ui_MainWindow(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.gridLayout_4 = QGridLayout()
         self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.nameOutput = QLineEdit(self.tab_2)
-        self.nameOutput.setObjectName(u"nameOutput")
-
-        self.gridLayout_4.addWidget(self.nameOutput, 5, 0, 1, 6)
-
         self.label_6 = QLabel(self.tab_2)
         self.label_6.setObjectName(u"label_6")
 
         self.gridLayout_4.addWidget(self.label_6, 0, 5, 1, 2)
-
-        self.logblock = QTextEdit(self.tab_2)
-        self.logblock.setObjectName(u"logblock")
-        self.logblock.setReadOnly(True)
-
-        self.gridLayout_4.addWidget(self.logblock, 6, 0, 1, 7)
-
-        self.toolButton_2 = QToolButton(self.tab_2)
-        self.toolButton_2.setObjectName(u"toolButton_2")
-        self.toolButton_2.setEnabled(False)
-        self.toolButton_2.setMinimumSize(QSize(22, 22))
-
-        self.gridLayout_4.addWidget(self.toolButton_2, 1, 1, 1, 1)
-
-        self.label_2 = QLabel(self.tab_2)
-        self.label_2.setObjectName(u"label_2")
-
-        self.gridLayout_4.addWidget(self.label_2, 0, 0, 1, 2)
 
         self.linePass1 = QLineEdit(self.tab_2)
         self.linePass1.setObjectName(u"linePass1")
@@ -242,13 +252,6 @@ class Ui_MainWindow(object):
         self.linePass1.setReadOnly(True)
 
         self.gridLayout_4.addWidget(self.linePass1, 1, 2, 1, 3)
-
-        self.pushButton = QPushButton(self.tab_2)
-        self.pushButton.setObjectName(u"pushButton")
-        self.pushButton.setMinimumSize(QSize(150, 0))
-        self.pushButton.setMaximumSize(QSize(150, 16777215))
-
-        self.gridLayout_4.addWidget(self.pushButton, 1, 0, 1, 1)
 
         self.datePass1 = QLabel(self.tab_2)
         self.datePass1.setObjectName(u"datePass1")
@@ -261,22 +264,16 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.datePass1, 1, 5, 1, 2)
 
-        self.openfile = QCheckBox(self.tab_2)
-        self.openfile.setObjectName(u"openfile")
-        self.openfile.setChecked(True)
+        self.label_2 = QLabel(self.tab_2)
+        self.label_2.setObjectName(u"label_2")
 
-        self.gridLayout_4.addWidget(self.openfile, 4, 0, 1, 2)
+        self.gridLayout_4.addWidget(self.label_2, 0, 0, 1, 2)
 
         self.checkhand = QCheckBox(self.tab_2)
         self.checkhand.setObjectName(u"checkhand")
         self.checkhand.setMaximumSize(QSize(120, 16777215))
 
-        self.gridLayout_4.addWidget(self.checkhand, 4, 2, 1, 1)
-
-        self.label_4 = QLabel(self.tab_2)
-        self.label_4.setObjectName(u"label_4")
-
-        self.gridLayout_4.addWidget(self.label_4, 0, 2, 1, 3)
+        self.gridLayout_4.addWidget(self.checkhand, 5, 2, 1, 1)
 
         self.checknm = QCheckBox(self.tab_2)
         self.checknm.setObjectName(u"checknm")
@@ -286,16 +283,57 @@ class Ui_MainWindow(object):
         sizePolicy4.setHeightForWidth(self.checknm.sizePolicy().hasHeightForWidth())
         self.checknm.setSizePolicy(sizePolicy4)
 
-        self.gridLayout_4.addWidget(self.checknm, 4, 3, 1, 2)
+        self.gridLayout_4.addWidget(self.checknm, 5, 3, 1, 2)
+
+        self.logblock = QTextEdit(self.tab_2)
+        self.logblock.setObjectName(u"logblock")
+        self.logblock.setReadOnly(True)
+
+        self.gridLayout_4.addWidget(self.logblock, 7, 0, 1, 7)
+
+        self.nameOutput = QLineEdit(self.tab_2)
+        self.nameOutput.setObjectName(u"nameOutput")
+
+        self.gridLayout_4.addWidget(self.nameOutput, 6, 0, 1, 6)
+
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.gridLayout_4.addItem(self.horizontalSpacer, 5, 5, 1, 2)
+
+        self.label_4 = QLabel(self.tab_2)
+        self.label_4.setObjectName(u"label_4")
+
+        self.gridLayout_4.addWidget(self.label_4, 0, 2, 1, 3)
+
+        self.openfile = QCheckBox(self.tab_2)
+        self.openfile.setObjectName(u"openfile")
+        self.openfile.setChecked(True)
+
+        self.gridLayout_4.addWidget(self.openfile, 5, 0, 1, 2)
 
         self.checkButton = QPushButton(self.tab_2)
         self.checkButton.setObjectName(u"checkButton")
 
-        self.gridLayout_4.addWidget(self.checkButton, 5, 6, 1, 1)
+        self.gridLayout_4.addWidget(self.checkButton, 6, 6, 1, 1)
 
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.preset_list = QComboBox(self.tab_2)
+        self.preset_list.setObjectName(u"preset_list")
 
-        self.gridLayout_4.addItem(self.horizontalSpacer, 4, 5, 1, 2)
+        self.gridLayout_4.addWidget(self.preset_list, 2, 0, 1, 1)
+
+        self.toolButton_2 = QToolButton(self.tab_2)
+        self.toolButton_2.setObjectName(u"toolButton_2")
+        self.toolButton_2.setEnabled(True)
+        self.toolButton_2.setMinimumSize(QSize(22, 22))
+
+        self.gridLayout_4.addWidget(self.toolButton_2, 2, 1, 1, 1)
+
+        self.pushButton = QPushButton(self.tab_2)
+        self.pushButton.setObjectName(u"pushButton")
+        self.pushButton.setMinimumSize(QSize(176, 0))
+        self.pushButton.setMaximumSize(QSize(176, 16777215))
+
+        self.gridLayout_4.addWidget(self.pushButton, 1, 0, 1, 2)
 
 
         self.verticalLayout.addLayout(self.gridLayout_4)
@@ -326,10 +364,11 @@ class Ui_MainWindow(object):
         MainWindow.setMenuBar(self.menubar)
 
         self.menubar.addAction(self.menu.menuAction())
+        self.menu.addAction(self.action)
 
         self.retranslateUi(MainWindow)
 
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -337,28 +376,30 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
+        self.action.setText(QCoreApplication.translate("MainWindow", u"\u041e \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0435", None))
         self.label_5.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b:", None))
         self.toolButton.setText(QCoreApplication.translate("MainWindow", u"...", None))
         self.pushButton2.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043a\u0440\u044b\u0442\u044c", None))
         self.label_3.setText(QCoreApplication.translate("MainWindow", u"\u0411\u0430\u0437\u0430 \u0434\u0430\u043d\u043d\u044b\u0445 (html):", None))
         self.label_7.setText(QCoreApplication.translate("MainWindow", u"\u0414\u0430\u0442\u0430 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f:", None))
         self.datePass2.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b \u043d\u0435 \u043e\u0442\u043a\u0440\u044b\u0442", None))
-        self.lineSearch.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u0422\u0435\u043a\u0441\u0442 \u0437\u0430\u043f\u0440\u043e\u0441\u0430", None))
-        self.search.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a", None))
         self.groupBox.setTitle(QCoreApplication.translate("MainWindow", u"\u041f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u044b \u043f\u043e\u0438\u0441\u043a\u0430", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"\u0417\u0430\u043f\u0440\u043e\u0441:", None))
+        self.lineSearch.setPlaceholderText(QCoreApplication.translate("MainWindow", u"\u0422\u0435\u043a\u0441\u0442 \u0437\u0430\u043f\u0440\u043e\u0441\u0430", None))
+        self.search.setText(QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a", None))
+        self.search_stop.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a \u0432 \u0431\u0430\u0437\u0435", None))
-        self.nameOutput.setText(QCoreApplication.translate("MainWindow", u"output_bom", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u0414\u0430\u0442\u0430 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f:", None))
-        self.toolButton_2.setText(QCoreApplication.translate("MainWindow", u"...", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0435\u0440\u0435\u0447\u0435\u043d\u044c \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u043e\u0432:", None))
-        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043a\u0440\u044b\u0442\u044c", None))
         self.datePass1.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b \u043d\u0435 \u043e\u0442\u043a\u0440\u044b\u0442", None))
-        self.openfile.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043f\u043e\u0441\u043b\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u044f", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0435\u0440\u0435\u0447\u0435\u043d\u044c \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u043e\u0432:", None))
         self.checkhand.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0432\u0435\u0440\u044f\u0442\u044c HAND", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b:", None))
         self.checknm.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0432\u0435\u0440\u044f\u0442\u044c NM", None))
+        self.nameOutput.setText(QCoreApplication.translate("MainWindow", u"output_bom", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b:", None))
+        self.openfile.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043f\u043e\u0441\u043b\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u044f", None))
         self.checkButton.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c", None))
+        self.toolButton_2.setText(QCoreApplication.translate("MainWindow", u"...", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043a\u0440\u044b\u0442\u044c", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a \u0438\u0437 \u0444\u0430\u0439\u043b\u0430", None))
         self.menu.setTitle(QCoreApplication.translate("MainWindow", u"\u0421\u043f\u0440\u0430\u0432\u043a\u0430", None))
     # retranslateUi

@@ -1,6 +1,9 @@
 import os
 import datetime
 import re
+import configparser
+
+DEFAULT_SETTINGS = ""
 
 def get_time_difference(start_time: datetime.datetime, end_time: datetime.datetime) -> str:
     """
@@ -44,13 +47,15 @@ def log(text, log_object=-1):
         if log_object != -1:
             log_object.update_text_signal.emit(log_entry)
             #log_object.append(log_entry)
-        print(log_entry)
+        print(log_entry.encode("utf-8"))
 
-
-def create_name_file(input_file, verified = True, date = True, suffix = True, suffix_text = ""):
+def create_name_file(input_file, verified = True, date = True, autosuffix = True, suffix_text = ""):
+    """
+    Генерирует название файла с указанием даты
+    """
     if input_file.find('.') != -1:
         k = input_file.find('.')
-        if suffix:
+        if autosuffix:
             suffix_text = input_file[k:]
         input_file = input_file[:k]
 
@@ -61,8 +66,6 @@ def create_name_file(input_file, verified = True, date = True, suffix = True, su
         input_file += str(today_date)
 
     return input_file + suffix_text
-
-
 
 def get_name_file(filename):
     if not os.path.isfile(filename):
@@ -82,3 +85,25 @@ def get_name_file(filename):
             counter += 1
             new_filename = f"{base}({counter}){ext}"
     return new_filename
+
+def get_config(cfg_file="default.ini", default_settings=[]):
+
+    config = configparser.ConfigParser()
+
+    if os.path.exists(cfg_file):
+        config.read(cfg_file, encoding="utf-8")
+        log("Settings loaded.")
+    else:
+        print("Settings file not found. Creating new...")
+        print(type(default_settings))
+        #for section, values in default_settings.items():
+        config["GENERAL"] = default_settings
+        save_settings(config, cfg_file)
+
+    return config
+
+def save_settings(config, cfg_file="default.ini"):
+    """Сохраняет текущие настройки в файл."""
+    with open(cfg_file, "w", encoding="utf-8") as f:
+        config.write(f)
+    print("Settings saved.")
