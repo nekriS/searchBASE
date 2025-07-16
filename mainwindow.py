@@ -236,7 +236,7 @@ class MainWindow(QMainWindow):
 
         if (".xls" in input_file) and not(".xlsx" in input_file):
             import win32com.client as win32
-            fname = "C:\\Projects\\searchBASE\\searchBASE\\data\\UTRx64_23462_R1_BOM.xls"
+            fname = input_file.replace("/","\\")
             excel = win32.gencache.EnsureDispatch('Excel.Application')
             wb = excel.Workbooks.Open(fname)
             wb.SaveAs(fname+"x", FileFormat = 51)    #FileFormat = 51 is for .xlsx extension

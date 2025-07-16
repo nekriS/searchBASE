@@ -16,7 +16,8 @@ DEFAULT_CONFIG = {
         'list_use_columns': "A, B, C, D, E, F",
         'list_skip_rows': 8,
         'list_pn_number': 3,
-        'check_type_number': True,
+        'check_empty_type_number': True,
+        'no_montage': 'NM',
         'list_type_number': 5,
         'save_list_after_check': False,
         'name_list_after_check': "list_after_check.xlsx",
@@ -24,6 +25,21 @@ DEFAULT_CONFIG = {
         'moves': True,
         'start_custom_column': 11,
         'widths': True
+    },
+    'LIST_SDC': {
+        'view_name': "SDC",
+        'list_use_columns': "A, B, C, E, F, H, M",
+        'list_skip_rows': 0,
+        'list_pn_number': 4,
+        'check_empty_type_number': False,
+        'no_montage': 'DNP',
+        'list_type_number': 5,
+        'save_list_after_check': True,
+        'name_list_after_check': "list_after_check.xlsx",
+        'frame_visible': False,
+        'moves': False,
+        'start_custom_column': 16,
+        'widths': False
     },
     'BASE_DEFAULT': {
         'view_name': "По умолчанию",
@@ -143,7 +159,7 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
     options = add_config_to_class(options, preset_list)
     options = add_config_to_class(options, "GENERAL")
 
-    st.log("The process find in BOM has begun.", options.log_object)
+    st.log("The process find LIST in table has begun.", options.log_object)
     start_time = datetime.datetime.now()
     params = ', '.join(f"{k}={repr(v)}" for k, v in vars(options).items())
     st.log(f"Options: name_bom={name_bom}, name_base={name_base}, {params}", options.log_object)
@@ -196,11 +212,15 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
         components_Lev = []
         components_Jac = []
         components_All = []
+        
         if type_part == "HAND" and not(options.check_hand):
             continue
-        if type_part == "NM" and not(options.check_nm):
+        if type_part == options.no_montage and not(options.check_nm):
             continue
-        if (len(type_part) > 1) and (len(str1) > MINIMAL_LEN):
+        if options.check_empty_type_number and len(type_part) <= 1:
+            continue
+
+        if len(str1) > MINIMAL_LEN:
             for index_base, row_base in base_table.iterrows():
 
                 balance = row_base[name_balance]
@@ -222,6 +242,8 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
                         result = 1
                         name_in_base = str2
                         break
+                    else:
+                        components_Lev.append([coef_Lev, str2, strs[i_Lev]])
                 if (coef_Lev > 0.5) and (coef_Jac > 0.5): 
                     components_All.append([coef_Lev, coef_Jac, str2, strs[i_Lev]])
                 else:
@@ -280,10 +302,10 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
 
     end_time = datetime.datetime.now()
     deltatime_str = st.get_time_difference(start_time, end_time)
-    st.log(f"The BOM file with results has been generated! Lead time: {deltatime_str}", options.log_object)
+    st.log(f"The LIST file with results has been generated! Lead time: {deltatime_str}", options.log_object)
     if options.save_list_after_check:
         bom_table.to_excel(options.name_list_after_check, index=False)
-        st.log(f"The BOM file with the results was saved as {options.name_list_after_check}.", options.log_object)
+        st.log(f"The LIST file with the results was saved as {options.name_list_after_check}.", options.log_object)
 
 
     return bom_table
