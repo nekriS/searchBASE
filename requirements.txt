@@ -1,0 +1,7 @@
+PySide6
+sklearn
+pandas
+datatime
+os
+Levenshtein
+xlrd

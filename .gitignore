@@ -12,7 +12,6 @@ data/
 *.xls
 *.html
 *.htm
-*.txt
 *.xlsx
 .qtcreator/
 /.qtcreator
