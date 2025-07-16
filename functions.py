@@ -4,10 +4,13 @@ import utility as ut
 import system as st
 import openpyxl as oxl
 from openpyxl.styles import PatternFill, Alignment, Border, Side, Font
-import datetime
 import configparser
 from openpyxl.utils import get_column_letter
 import ast
+import datetime as dt
+import fnmatch
+from mainwindow import PandasModel 
+import time
 
 MINIMAL_LEN = 2
 NAME_CONFIG_FILE = "config.ini"
@@ -114,7 +117,7 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
     options = add_config_to_class(options, "GENERAL")
 
     st.log("The process find LIST in table has begun.", options.log_object)
-    start_time = datetime.datetime.now()
+    start_time = dt.datetime.now()
     params = ', '.join(f"{k}={repr(v)}" for k, v in vars(options).items())
     st.log(f"Options: name_bom={name_bom}, name_base={name_base}, {params}", options.log_object)
 
@@ -245,7 +248,7 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
             if str1 != "" and str1 != " ":
                 st.log(f"{str1} res={str(result)} bal={str(balance)}.", options.log_object)
 
-    end_time = datetime.datetime.now()
+    end_time = dt.datetime.now()
     deltatime_str = st.get_time_difference(start_time, end_time)
     st.log(f"The LIST file with results has been generated! Lead time: {deltatime_str}", options.log_object)
     if options.save_list_after_check:
@@ -263,7 +266,7 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False, op
 
     st.log("The process draw file has begun.", options.log_object)
     st.log(f"Options: name_bom={name_bom}, output_name={outputname}, open_file={open_file}", options.log_object)
-    start_time = datetime.datetime.now()
+    start_time = dt.datetime.now()
 
 
     bom_table_ = pd.read_excel(name_bom, usecols=options.list_use_columns, skiprows=options.list_skip_rows)
@@ -432,11 +435,54 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False, op
             st.log(f"The file cannot be opened. It may be busy! File: {outputname}", options.log_object)
 
 
-    end_time = datetime.datetime.now()
+    end_time = dt.datetime.now()
     deltatime_str = st.get_time_difference(start_time, end_time)
     st.log(f"The draw file has been generated! Lead time: {deltatime_str}", options.log_object)
     options.log_object.update_bar_signal.emit(100)
 
+def search(name_base, search_line, options, preset_base='BASE_DEFAULT'):
+
+    print(name_base)
+    print(search_line)
+    
+    start_time = dt.datetime.now()
+    base_table = pd.read_html(name_base, encoding='cp1251')[int(options.config[preset_base]['base_table_number'])]
+
+    header_base = base_table.columns.tolist()
+    #for i_column in options.base_drop_column:
+    #    base_table = base_table.drop(columns=[header_base[i_column]])
+    base_table = base_table.fillna("")
+
+    output_table = pd.DataFrame()
+    i = 1
+    j = 1
+    last_proc = 0
+
+    for index, row in base_table.iterrows():
+        if not(options.log_object._is_running):
+            break
+
+        i += 1
+
+        if fnmatch.fnmatch(row['Component'], f"*{search_line}*") or fnmatch.fnmatch(row['Comment'], f"*{search_line}*") or fnmatch.fnmatch(row[header_base[6]], f"*{search_line}*"):
+            output_table = output_table._append(row, ignore_index=True)
+            model = PandasModel(output_table)
+            time.sleep(0.2)
+            options.log_object.update_table_signal.emit(model)
+            j += 1
+
+        proc = round(i/(len(base_table)+1) * 10)
+
+        if not(last_proc == proc):
+            print(proc)
+            options.log_object.update_bar_signal.emit(proc*10)
+        
+        last_proc = proc
+
+        if j == 100:
+            break
+
+    options.log_object.update_bar_signal.emit(100)
 
 if __name__ == "__main__":
 
