@@ -7,6 +7,7 @@ from openpyxl.styles import PatternFill, Alignment, Border, Side, Font
 import datetime
 import configparser
 from openpyxl.utils import get_column_letter
+import ast
 
 MINIMAL_LEN = 2
 NAME_CONFIG_FILE = "config.ini"
@@ -34,7 +35,7 @@ DEFAULT_CONFIG = {
         'check_empty_type_number': False,
         'no_montage': 'DNP',
         'list_type_number': 5,
-        'save_list_after_check': True,
+        'save_list_after_check': False,
         'name_list_after_check': "list_after_check.xlsx",
         'frame_visible': False,
         'moves': False,
@@ -71,7 +72,6 @@ def print_config(config):
         print()
 
 class options():
-
     def __init__(self,
                  config = configparser.ConfigParser(),
                  check_hand = False,
@@ -96,53 +96,7 @@ class options():
             self.config.read(NAME_CONFIG_FILE, encoding="utf-8")
 
 
-# class options_:
-#     def __init__(self, 
-#                  list_use_columns = "A, B, C, D, E, F", # необходимые столбцы из перечня компонентов
-#                  list_skip_rows = 8, # сколько строк при анализе необходимо удалить
-#                  list_pn_number = 3, # номер столбца, в котором находится парт номер
-#                  list_type_number = 5, # номер столбца, в котором находится тип монтажа
-#                  save_bom2excel = False, # 
-#                  name_bom2excel = "bom.xlsx", # 
-#                  base_table_number = 2, # номер таблицы из базы
-#                  base_pn_number = 0, # номер столбца, в котором находится парт номер
-#                  base_drop_column = [11, 10, 9, 8, 4, 3, 2], # номера столбцов, которые необходимо выкинуть
-#                  base_balance_number = 2, # 
-#                  base_1c_number = 3, # 
-#                  base_comm_number = 1, # 
-#                  save_base2excel = False, # сохранить ли базу в эксель
-#                  name_base2excel = "base.xlsx", # название для базы при сохранении в эксель
-#                  compare_method = "normal", # тип сравнения нормальный (с порогами) или с помощью нейронной сети
-#                  quiet_mode = False, # включает тихий режим (отключает сообщения отладки)
-#                  check_hand = False,
-#                  check_nm = False,
-#                  log_object = -1):
-#         self.list_use_columns = list_use_columns 
-#         self.list_skip_rows = list_skip_rows 
-#         self.list_pn_number = list_pn_number 
-#         self.list_type_number = list_type_number
-#         self.save_bom2excel = save_bom2excel
-#         self.name_bom2excel = name_bom2excel
-#         self.base_table_number = base_table_number
-#         self.base_pn_number = base_pn_number
-#         self.base_drop_column = base_drop_column
-#         self.base_balance_number = base_balance_number
-#         self.base_1c_number = base_1c_number 
-#         self.base_comm_number = base_comm_number 
-#         self.save_base2excel = save_base2excel
-#         self.name_base2excel = name_base2excel
-#         self.compare_method = compare_method
-#         self.quiet_mode = quiet_mode
-#         self.check_hand = check_hand
-#         self.check_nm = check_nm
-#         self.log_object = log_object
-
-#     def config(self):
-#         pass
-import ast
-
 def add_config_to_class(class_object, section):
-
     for param, value in class_object.config[section].items():
         try:
             setattr(class_object, param, int(value))
@@ -164,10 +118,7 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
     params = ', '.join(f"{k}={repr(v)}" for k, v in vars(options).items())
     st.log(f"Options: name_bom={name_bom}, name_base={name_base}, {params}", options.log_object)
 
-    #try:
     bom_table = pd.read_excel(name_bom, usecols=options.list_use_columns, skiprows=options.list_skip_rows)
-    #except:
-    #    bom_table = pd.read_excel(name_bom, engine="xlrd", usecols=options.list_use_columns, skiprows=options.list_skip_rows)
 
     header_bom = bom_table.columns.tolist()
     name_pn_bom = header_bom[options.list_pn_number]
@@ -177,15 +128,12 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
     header_base = base_table.columns.tolist()
     for i_column in options.base_drop_column:
         base_table = base_table.drop(columns=[header_base[i_column]])
-    #base_table = base_table.drop(options.base_drop_column)
+
     header_base = base_table.columns.tolist()
     name_pn_base = header_base[options.base_pn_number]
     name_comm_base = header_base[options.base_comm_number]
     name_1c_base = header_base[options.base_1c_number]
     name_balance = header_base[options.base_balance_number]
-
-    #print(base_table)
-    #print(header_base)
 
     if options.save_base2excel:
         base_table.to_excel(options.name_base2excel, index=False)
@@ -201,9 +149,6 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
         
         str1 = str(row_bom[name_pn_bom]).replace("nan", "")
         type_part = str(row_bom[type_part_bom]).replace("nan", "")
-
-
-
 
         result = 0
         balance = 0
@@ -326,7 +271,7 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False, op
     name_pn_bom = header_bom[options.list_pn_number]
     
     workbook = oxl.load_workbook(name_bom)
-    #sheet_names = workbook.sheetnames
+
     main_sheet = workbook.worksheets[0]
     main_sheet.title = "Перечень элементов"
 
