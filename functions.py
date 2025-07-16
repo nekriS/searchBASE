@@ -1,3 +1,6 @@
+from PySide6.QtCore import QAbstractTableModel, Qt
+from PySide6.QtGui import QColor
+
 import os
 import pandas as pd
 import utility as ut
@@ -9,7 +12,6 @@ from openpyxl.utils import get_column_letter
 import ast
 import datetime as dt
 import fnmatch
-from mainwindow import PandasModel 
 import time
 
 MINIMAL_LEN = 2
@@ -73,6 +75,46 @@ def print_config(config):
         for key, value in config[section].items():
             print(f"{key} = {value}")
         print()
+
+class PandasModel(QAbstractTableModel):
+    def __init__(self, data):
+        super().__init__()
+        self._data = data
+
+    def rowCount(self, parent=None):
+        return self._data.shape[0]
+
+    def columnCount(self, parent=None):
+        return self._data.shape[1]
+
+    def data(self, index, role=Qt.DisplayRole):
+        if index.isValid():
+            if role == Qt.DisplayRole:
+                return str(self._data.iloc[index.row(), index.column()])
+
+
+        value = self._data.iloc[index.row(), index.column()]
+        if role == Qt.BackgroundRole:
+            try:
+
+                #if isinstance(str(value), str) and "R-0402" in str(value):
+                #    return QColor("#ffeeaa")
+
+                if isinstance(float(value), (int, float)) and float(value) <= 0:
+                    return QColor("#FFBCBC")
+
+            except Exception:
+                pass
+
+        return None
+
+    def headerData(self, section, orientation, role=Qt.DisplayRole):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                return str(self._data.columns[section])
+            elif orientation == Qt.Vertical:
+                return str(self._data.index[section])
+        return None
 
 class options():
     def __init__(self,

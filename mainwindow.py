@@ -2,9 +2,6 @@ VERSION = "0.0.3"
 DATE = "15.07.2025"
 
 # This Python file uses the following encoding: utf-8
-import sys
-
-from PySide6.QtWidgets import QApplication, QMainWindow
 
 # Important:
 # You need to run the following command to generate the ui_form.py file
@@ -12,17 +9,17 @@ from PySide6.QtWidgets import QApplication, QMainWindow
 #     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
 from PySide6.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox
-from PySide6.QtGui import QIcon, QColor
+from PySide6.QtGui import QIcon
 from PySide6.QtCore import QFileInfo
+from PySide6.QtCore import QThread, Signal
+
+import pandas as pd
 import os
 from pathlib import Path
 from datetime import datetime
 import system as st
 import functions as mf
-from PySide6.QtCore import QThread, Signal, QAbstractTableModel, Qt
-#from concurrent.futures import ThreadPoolExecutor
-import search as sch
-import pandas as pd
+import sys
 
 
 
@@ -36,45 +33,6 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
-class PandasModel(QAbstractTableModel):
-    def __init__(self, data):
-        super().__init__()
-        self._data = data
-
-    def rowCount(self, parent=None):
-        return self._data.shape[0]
-
-    def columnCount(self, parent=None):
-        return self._data.shape[1]
-
-    def data(self, index, role=Qt.DisplayRole):
-        if index.isValid():
-            if role == Qt.DisplayRole:
-                return str(self._data.iloc[index.row(), index.column()])
-
-
-        value = self._data.iloc[index.row(), index.column()]
-        if role == Qt.BackgroundRole:
-            try:
-
-                #if isinstance(str(value), str) and "R-0402" in str(value):
-                #    return QColor("#ffeeaa")
-
-                if isinstance(float(value), (int, float)) and float(value) <= 0:
-                    return QColor("#FFBCBC")
-
-            except Exception:
-                pass
-
-        return None
-
-    def headerData(self, section, orientation, role=Qt.DisplayRole):
-        if role == Qt.DisplayRole:
-            if orientation == Qt.Horizontal:
-                return str(self._data.columns[section])
-            elif orientation == Qt.Vertical:
-                return str(self._data.index[section])
-        return None
 
 
 
@@ -118,7 +76,7 @@ class WorkerSearch(QThread):
 
         self.options_.log_object = self
 
-        sch.search(self.base_file, self.search_line, self.options_)
+        mf.search(self.base_file, self.search_line, self.options_)
 
 
     def stop(self):
