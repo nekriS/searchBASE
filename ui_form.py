@@ -238,11 +238,26 @@ class Ui_MainWindow(object):
         self.verticalLayout = QVBoxLayout(self.tab_2)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.gridLayout_4 = QGridLayout()
+        self.gridLayout_4.setSpacing(6)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.gridLayout_4.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.gridLayout_4.setContentsMargins(-1, 0, -1, -1)
         self.label_6 = QLabel(self.tab_2)
         self.label_6.setObjectName(u"label_6")
 
         self.gridLayout_4.addWidget(self.label_6, 0, 5, 1, 2)
+
+        self.openfile = QCheckBox(self.tab_2)
+        self.openfile.setObjectName(u"openfile")
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.openfile.sizePolicy().hasHeightForWidth())
+        self.openfile.setSizePolicy(sizePolicy3)
+        self.openfile.setMaximumSize(QSize(176, 16777215))
+        self.openfile.setChecked(True)
+
+        self.gridLayout_4.addWidget(self.openfile, 6, 0, 1, 2)
 
         self.linePass1 = QLineEdit(self.tab_2)
         self.linePass1.setObjectName(u"linePass1")
@@ -253,27 +268,10 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.linePass1, 1, 2, 1, 3)
 
-        self.datePass1 = QLabel(self.tab_2)
-        self.datePass1.setObjectName(u"datePass1")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.datePass1.sizePolicy().hasHeightForWidth())
-        self.datePass1.setSizePolicy(sizePolicy3)
-        self.datePass1.setMinimumSize(QSize(278, 0))
+        self.checkButton = QPushButton(self.tab_2)
+        self.checkButton.setObjectName(u"checkButton")
 
-        self.gridLayout_4.addWidget(self.datePass1, 1, 5, 1, 2)
-
-        self.label_2 = QLabel(self.tab_2)
-        self.label_2.setObjectName(u"label_2")
-
-        self.gridLayout_4.addWidget(self.label_2, 0, 0, 1, 2)
-
-        self.checkhand = QCheckBox(self.tab_2)
-        self.checkhand.setObjectName(u"checkhand")
-        self.checkhand.setMaximumSize(QSize(120, 16777215))
-
-        self.gridLayout_4.addWidget(self.checkhand, 5, 2, 1, 1)
+        self.gridLayout_4.addWidget(self.checkButton, 7, 6, 1, 1)
 
         self.checknm = QCheckBox(self.tab_2)
         self.checknm.setObjectName(u"checknm")
@@ -283,50 +281,56 @@ class Ui_MainWindow(object):
         sizePolicy4.setHeightForWidth(self.checknm.sizePolicy().hasHeightForWidth())
         self.checknm.setSizePolicy(sizePolicy4)
 
-        self.gridLayout_4.addWidget(self.checknm, 5, 3, 1, 2)
-
-        self.logblock = QTextEdit(self.tab_2)
-        self.logblock.setObjectName(u"logblock")
-        self.logblock.setReadOnly(True)
-
-        self.gridLayout_4.addWidget(self.logblock, 7, 0, 1, 7)
-
-        self.nameOutput = QLineEdit(self.tab_2)
-        self.nameOutput.setObjectName(u"nameOutput")
-
-        self.gridLayout_4.addWidget(self.nameOutput, 6, 0, 1, 6)
-
-        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
-
-        self.gridLayout_4.addItem(self.horizontalSpacer, 5, 5, 1, 2)
+        self.gridLayout_4.addWidget(self.checknm, 6, 3, 1, 2)
 
         self.label_4 = QLabel(self.tab_2)
         self.label_4.setObjectName(u"label_4")
 
         self.gridLayout_4.addWidget(self.label_4, 0, 2, 1, 3)
 
-        self.openfile = QCheckBox(self.tab_2)
-        self.openfile.setObjectName(u"openfile")
-        self.openfile.setChecked(True)
+        self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
-        self.gridLayout_4.addWidget(self.openfile, 5, 0, 1, 2)
+        self.gridLayout_4.addItem(self.horizontalSpacer, 6, 5, 1, 2)
 
-        self.checkButton = QPushButton(self.tab_2)
-        self.checkButton.setObjectName(u"checkButton")
+        self.label_2 = QLabel(self.tab_2)
+        self.label_2.setObjectName(u"label_2")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
+        sizePolicy5.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy5)
+        self.label_2.setMinimumSize(QSize(176, 0))
+        self.label_2.setMaximumSize(QSize(176, 16777215))
 
-        self.gridLayout_4.addWidget(self.checkButton, 6, 6, 1, 1)
+        self.gridLayout_4.addWidget(self.label_2, 0, 0, 1, 2)
 
-        self.preset_list = QComboBox(self.tab_2)
-        self.preset_list.setObjectName(u"preset_list")
+        self.checkhand = QCheckBox(self.tab_2)
+        self.checkhand.setObjectName(u"checkhand")
+        self.checkhand.setMaximumSize(QSize(120, 16777215))
 
-        self.gridLayout_4.addWidget(self.preset_list, 2, 0, 1, 1)
+        self.gridLayout_4.addWidget(self.checkhand, 6, 2, 1, 1)
 
-        self.toolButton_2 = QToolButton(self.tab_2)
-        self.toolButton_2.setObjectName(u"toolButton_2")
-        self.toolButton_2.setEnabled(True)
-        self.toolButton_2.setMinimumSize(QSize(22, 22))
+        self.logblock = QTextEdit(self.tab_2)
+        self.logblock.setObjectName(u"logblock")
+        self.logblock.setReadOnly(True)
 
-        self.gridLayout_4.addWidget(self.toolButton_2, 2, 1, 1, 1)
+        self.gridLayout_4.addWidget(self.logblock, 8, 0, 1, 7)
+
+        self.nameOutput = QLineEdit(self.tab_2)
+        self.nameOutput.setObjectName(u"nameOutput")
+
+        self.gridLayout_4.addWidget(self.nameOutput, 7, 0, 1, 6)
+
+        self.datePass1 = QLabel(self.tab_2)
+        self.datePass1.setObjectName(u"datePass1")
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Maximum, QSizePolicy.Policy.Preferred)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(self.datePass1.sizePolicy().hasHeightForWidth())
+        self.datePass1.setSizePolicy(sizePolicy6)
+        self.datePass1.setMinimumSize(QSize(278, 0))
+
+        self.gridLayout_4.addWidget(self.datePass1, 1, 5, 1, 2)
 
         self.pushButton = QPushButton(self.tab_2)
         self.pushButton.setObjectName(u"pushButton")
@@ -335,6 +339,18 @@ class Ui_MainWindow(object):
 
         self.gridLayout_4.addWidget(self.pushButton, 1, 0, 1, 2)
 
+        self.preset_list = QComboBox(self.tab_2)
+        self.preset_list.setObjectName(u"preset_list")
+        self.preset_list.setMaximumSize(QSize(176, 16777215))
+
+        self.gridLayout_4.addWidget(self.preset_list, 2, 0, 1, 2)
+
+        self.gridLayout_4.setColumnStretch(1, 1)
+        self.gridLayout_4.setColumnStretch(2, 1)
+        self.gridLayout_4.setColumnStretch(3, 1)
+        self.gridLayout_4.setColumnStretch(4, 1)
+        self.gridLayout_4.setColumnStretch(5, 1)
+        self.gridLayout_4.setColumnStretch(6, 1)
 
         self.verticalLayout.addLayout(self.gridLayout_4)
 
@@ -390,15 +406,14 @@ class Ui_MainWindow(object):
         self.search_stop.setText("")
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_3), QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a \u0432 \u0431\u0430\u0437\u0435", None))
         self.label_6.setText(QCoreApplication.translate("MainWindow", u"\u0414\u0430\u0442\u0430 \u0440\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u044f:", None))
-        self.datePass1.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b \u043d\u0435 \u043e\u0442\u043a\u0440\u044b\u0442", None))
-        self.label_2.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0435\u0440\u0435\u0447\u0435\u043d\u044c \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u043e\u0432:", None))
-        self.checkhand.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0432\u0435\u0440\u044f\u0442\u044c HAND", None))
-        self.checknm.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0432\u0435\u0440\u044f\u0442\u044c NM", None))
-        self.nameOutput.setText(QCoreApplication.translate("MainWindow", u"output_bom", None))
-        self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b:", None))
         self.openfile.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043a\u0440\u044b\u0442\u044c \u043f\u043e\u0441\u043b\u0435 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0438\u044f", None))
         self.checkButton.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0432\u0435\u0440\u0438\u0442\u044c", None))
-        self.toolButton_2.setText(QCoreApplication.translate("MainWindow", u"...", None))
+        self.checknm.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0432\u0435\u0440\u044f\u0442\u044c NM", None))
+        self.label_4.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b:", None))
+        self.label_2.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0435\u0440\u0435\u0447\u0435\u043d\u044c \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u043e\u0432:", None))
+        self.checkhand.setText(QCoreApplication.translate("MainWindow", u"\u041f\u0440\u043e\u0432\u0435\u0440\u044f\u0442\u044c HAND", None))
+        self.nameOutput.setText(QCoreApplication.translate("MainWindow", u"output_bom", None))
+        self.datePass1.setText(QCoreApplication.translate("MainWindow", u"\u0424\u0430\u0439\u043b \u043d\u0435 \u043e\u0442\u043a\u0440\u044b\u0442", None))
         self.pushButton.setText(QCoreApplication.translate("MainWindow", u"\u041e\u0442\u043a\u0440\u044b\u0442\u044c", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"\u041f\u043e\u0438\u0441\u043a \u0438\u0437 \u0444\u0430\u0439\u043b\u0430", None))
         self.menu.setTitle(QCoreApplication.translate("MainWindow", u"\u0421\u043f\u0440\u0430\u0432\u043a\u0430", None))
