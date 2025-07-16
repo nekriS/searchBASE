@@ -55,6 +55,8 @@ class Worker(QThread):
         self.options_.log_object = self
         bom_table = mf.find_bom_in_base(self.input_file, self.base_file, self.options_, preset_list=self.presetlist)
         mf.draw_file(self.input_file, bom_table, self.output_file, self.open_file, self.options_, preset_list=self.presetlist)
+        if QFileInfo(self.input_file).fileName() == "temp.xlsx":
+            os.remove(self.input_file)
 
 
 class WorkerSearch(QThread):
@@ -197,10 +199,11 @@ class MainWindow(QMainWindow):
             fname = input_file.replace("/","\\")
             excel = win32.gencache.EnsureDispatch('Excel.Application')
             wb = excel.Workbooks.Open(fname)
+            fname = fname.replace(QFileInfo(input_file).fileName(), "temp.xls")
             wb.SaveAs(fname+"x", FileFormat = 51)    #FileFormat = 51 is for .xlsx extension
             wb.Close()                               #FileFormat = 56 is for .xls extension
             excel.Application.Quit()
-            input_file += "x"
+            input_file = input_file.replace(QFileInfo(input_file).fileName(), "temp.xls") + "x"
 
 
         options = mf.options()
