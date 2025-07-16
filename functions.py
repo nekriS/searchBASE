@@ -466,6 +466,7 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False, op
 
     ut.set_column_autowidth(main_sheet, [f'{get_column_letter(options.start_custom_column+1)}'])
     ut.set_column_autowidth(main_sheet, [f'{get_column_letter(options.start_custom_column)}'], 1.1)
+    ut.set_column_autowidth(main_sheet, [f'{get_column_letter(options.start_custom_column+2)}'], 1.1)
 
     outputname = st.get_name_file(outputname)
 
