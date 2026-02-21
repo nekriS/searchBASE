@@ -1,7 +1,9 @@
 PySide6
-sklearn
+scikit-learn
 pandas
 datatime
 os
 Levenshtein
+openpyxl
 xlrd
+lxml

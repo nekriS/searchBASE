@@ -1,5 +1,5 @@
-VERSION = "0.0.3"
-DATE = "15.07.2025"
+VERSION = "0.0.4"
+DATE = "20.02.2026"
 
 # This Python file uses the following encoding: utf-8
 
@@ -194,6 +194,10 @@ class MainWindow(QMainWindow):
         output_file = self.ui.nameOutput.text()
         open_file = self.ui.openfile.isChecked()
 
+
+        options = mf.options()
+
+
         if (".xls" in input_file) and not(".xlsx" in input_file):
             import win32com.client as win32
             fname = input_file.replace("/","\\")
@@ -206,7 +210,7 @@ class MainWindow(QMainWindow):
             input_file = input_file.replace(QFileInfo(input_file).fileName(), "temp.xls") + "x"
 
 
-        options = mf.options()
+
 
         options.check_hand = self.ui.checkhand.isChecked()
         options.check_nm = self.ui.checknm.isChecked()

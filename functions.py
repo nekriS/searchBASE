@@ -30,7 +30,9 @@ DEFAULT_CONFIG = {
         'frame_visible': True,
         'moves': True,
         'start_custom_column': 11,
-        'widths': True
+        'widths': True,
+        'cap_mask': "TYPE-SIZE-DIE-VOL-VALUE TOL",
+        'res_mask': "TYPE-SIZE-VALUE TOL"
     },
     'LIST_SDC': {
         'view_name': "SDC",
@@ -45,7 +47,9 @@ DEFAULT_CONFIG = {
         'frame_visible': False,
         'moves': False,
         'start_custom_column': 16,
-        'widths': False
+        'widths': False,
+        'cap_mask': "SIZE-DIE-VOL-VALUE TOL",
+        'res_mask': "SIZE-VALUE TOL"
     },
     'BASE_DEFAULT': {
         'view_name': "По умолчанию",
@@ -56,7 +60,8 @@ DEFAULT_CONFIG = {
         'base_1c_number': 3,
         'base_comm_number': 1,
         'save_base2excel': False,
-        'name_base2excel': "base.xlsx"
+        'name_base2excel': "base.xlsx",
+        'search_column': 3
     },
     'GENERAL': {
         'compare_method': "normal",
@@ -218,44 +223,124 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
                 str2_comm = str(row_base[name_comm_base])
                 str2_1c = str(row_base[name_1c_base])
 
+                match options.search_column:
+                    case options.base_pn_number:
+                        str_target = str2
+                    case options.base_comm_number:
+                        str_target = str2_comm
+                    case options.base_1c_number:
+                        str_target = str2_1c
+
                 strs = [str2, str2_comm, str2_1c]
                 coef_Lev, i_Lev = ut.nmax([ut.compare(str1, str2, 'Levenshtein'), ut.compare(str1, str2_comm, 'Levenshtein'), ut.compare(str1, str2_1c, 'Levenshtein')])
                 coef_Jac, i_Jac = ut.nmax([ut.compare(str1, str2, 'Jacquard'), ut.compare(str1, str2_comm, 'Jacquard'), ut.compare(str1, str2_1c, 'Jacquard')])
                 coef_equ, i_equ =  ut.nmax([ut.compare(str1, str2), ut.compare(str1, str2_comm), ut.compare(str1, str2_1c)])
 
+                #print(coef_Lev, i_Lev)
+                #print(coef_Jac, i_Jac)
+                #print(coef_equ, i_equ)
+
                 if coef_equ == 1:
-                    if ut.compare(str1, str2, 'Levenshtein') > 0.9 and ut.compare(str1, str2, 'Jacquard') > 0.6:
+                    if coef_Lev > 0.9 and coef_Jac > 0.6:
                         result = 2
-                        name_in_base = str2
+                        name_in_base = str_target
                         break
-                    elif ut.compare(str1, str2, 'Jacquard') > 0.3:
+                    elif coef_Lev > 0.6 or coef_Jac > 0.3:
                         result = 1
-                        name_in_base = str2
+                        name_in_base = str_target
                         break
                     else:
-                        components_Lev.append([coef_Lev, str2, strs[i_Lev]])
-                if (coef_Lev > 0.5) and (coef_Jac > 0.5): 
-                    components_All.append([coef_Lev, coef_Jac, str2, strs[i_Lev]])
+                        components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
+                        components_Jac.append([coef_Jac, str_target, strs[i_Jac]])
+                        continue
+
+                
+                
                 else:
-                    if (coef_Lev > 0.5):
-                        if ut.isRLC(str1)[0]:
-                            if ut.isRLC(str1)[1] in str2:
-                                components_Lev.append([coef_Lev, str2, strs[i_Lev]])
-                        else:
-                            components_Lev.append([coef_Lev, str2, strs[i_Lev]])
-                    if (coef_Jac > 0.5):
-                        components_Jac.append([coef_Jac, str2, strs[i_Jac]])
+
+                    if ut.isRLC(str1, options)[0]:
+                        str1_offmask = ut.isRLC(str1, options)
+                        match str1_offmask[1]:
+                            case "R":
+                                str2_offmask = ut.isRLC(str2_1c, options, "TYPE-SIZE-VALUE TOL")
+                                if str2_offmask[0]  and str2_offmask[1] == "R":
+
+                                    if ut.parse_component_value(str1_offmask[3].split(" ")[0]) != 0 and ut.parse_component_value(str2_offmask[3].split(" ")[0]) != 0:
+                                        value_err = abs((ut.parse_component_value(str1_offmask[3].split(" ")[0]) / ut.parse_component_value(str2_offmask[3].split(" ")[0])) - 1)
+                                    elif ut.parse_component_value(str1_offmask[3].split(" ")[0]) == ut.parse_component_value(str2_offmask[3].split(" ")[0]):
+                                        value_err = 0
+                                    else:
+                                        value_err = 1
+
+
+                                    if str1_offmask[1] == str2_offmask[1] and str1_offmask[2] == str2_offmask[2] and (value_err < 0.2):
+                                        if coef_Lev > 0.6 or coef_Jac > 0.3:
+                                            components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
+                                            components_Jac.append([coef_Jac, str_target, strs[i_Jac]])
+                                    else:
+                                        continue
+                            case "C":
+                                str2_offmask = ut.isRLC(str2_1c, options, "TYPE-SIZE-DIE-VOL-VALUE TOL")
+                                if str2_offmask[0] and str2_offmask[1] == "C":
+                                    
+                                    print(str1, str2_1c)
+                                    print(str1_offmask, str2_offmask)
+                                    value_err = abs((ut.parse_component_value(str1_offmask[5].split(" ")[0]) / ut.parse_component_value(str2_offmask[5].split(" ")[0])) - 1)
+                                    print(value_err)
+                                    
+
+                                    if str1_offmask[1] == str2_offmask[1] and str1_offmask[2] == str2_offmask[2] and str1_offmask[4] <= str2_offmask[4] and (value_err < 0.2):
+                                        if coef_Lev > 0.6 or coef_Jac > 0.3:
+                                            components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
+                                            components_Jac.append([coef_Jac, str_target, strs[i_Jac]])
+                                    else:
+                                        continue
+
+                    else:
+                        if coef_Lev > 0.5:
+                            components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
+                        elif coef_Jac > 0.5:
+                            components_Jac.append([coef_Jac, str_target, strs[i_Jac]])
+
+
+            #     if coef_equ == 1:
+            #         if ut.compare(str1, str_target, 'Levenshtein') > 0.9 and ut.compare(str1, str_target, 'Jacquard') > 0.6:
+            #             result = 2
+            #             name_in_base = str_target
+            #             break
+            #         elif ut.compare(str1, str_target, 'Jacquard') > 0.3:
+            #             result = 1
+            #             name_in_base = str_target
+            #             break
+            #         else:
+            #             components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
+            #     if (coef_Lev > 0.5) and (coef_Jac > 0.5): 
+            #         components_All.append([coef_Lev, coef_Jac, str_target, strs[i_Lev]])
+            #     else:
+            #         if (coef_Lev > 0.5):
+            #             if ut.isRLC(str1)[0]:
+            #                 if ut.isRLC(str1)[1] in str_target:
+            #                     components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
+            #             else:
+            #                 components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
+            #         if (coef_Jac > 0.5):
+            #             components_Jac.append([coef_Jac, str_target, strs[i_Jac]])
+
+            # print(components_Lev)
+            # print()
 
             components_Lev = sorted(components_Lev, key=lambda x: x[0], reverse=True)
             components_Jac = sorted(components_Jac, key=lambda x: x[0], reverse=True)
-            components_All = sorted(components_All, key=lambda x: x[0], reverse=True)
+            # components_All = sorted(components_All, key=lambda x: x[0], reverse=True)
+
+            # print(components_Lev)
 
             if result == 0:
                 if options.compare_method == "normal":
-                    if (len(components_All) > 0):
-                        if components_All[0][0] > 0.9 and components_All[0][1] > 0.6:
+                    if (len(components_Lev) > 0) or (len(components_Jac) > 0):
+                        if components_Lev[0][0] > 0.9 and components_Jac[0][0] > 0.6:
                             result = 1
-                            name_in_base = str(components_All[0][2])
+                            name_in_base = str(components_Lev[0][1])
                         else:
                             if (len(components_Lev) > 0) or (len(components_Jac) > 0):
                                 if components_Lev[0][0] > 0.95:
@@ -266,14 +351,29 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
                             else:
                                 result = -2
                     else:
-                        if (len(components_Lev) > 0) or (len(components_Jac) > 0):
-                            if components_Lev[0][0] > 0.95:
-                                result = 1
-                                name_in_base = str(components_Lev[0][1])
-                            else:
-                                result = -1
-                        else:
-                            result = -2
+                        result = -2
+                    # if (len(components_All) > 0):
+                    #     if components_All[0][0] > 0.9 and components_All[0][1] > 0.6:
+                    #         result = 1
+                    #         name_in_base = str(components_All[0][2])
+                    #     else:
+                    #         if (len(components_Lev) > 0) or (len(components_Jac) > 0):
+                    #             if components_Lev[0][0] > 0.95:
+                    #                 result = 1
+                    #                 name_in_base = str(components_Lev[0][1])
+                    #             else:
+                    #                 result = -1
+                    #         else:
+                    #             result = -2
+                    # else:
+                    #     if (len(components_Lev) > 0) or (len(components_Jac) > 0):
+                    #         if components_Lev[0][0] > 0.95:
+                    #             result = 1
+                    #             name_in_base = str(components_Lev[0][1])
+                    #         else:
+                    #             result = -1
+                    #     else:
+                    #         result = -2
 
             if result < 0:
                 bom_table.at[index_bom, 'SMT Левенштейна'] = str(components_Lev)
@@ -288,7 +388,11 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
 
         if not(options.quiet_mode):
             if str1 != "" and str1 != " ":
-                st.log(f"{str1} res={str(result)} bal={str(balance)}.", options.log_object)
+                if (len(components_Lev) > 0):
+                    lev = components_Lev[0][0]
+                else:
+                    lev = -1
+                st.log(f"target={str1}, result={name_in_base}, c_lev={lev}, status={str(result)}, balance={str(balance)}.", options.log_object)
 
     end_time = dt.datetime.now()
     deltatime_str = st.get_time_difference(start_time, end_time)
