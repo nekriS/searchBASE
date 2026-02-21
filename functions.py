@@ -20,7 +20,7 @@ DEFAULT_CONFIG = {
     'LIST_DEFAULT': {
         'view_name': "По умолчанию",
         'list_use_columns': "A, B, C, D, E, F",
-        'unvisible_columns': "",
+        'unvisible_columns': "F, H, Z",
         'list_skip_rows': 8,
         'list_pn_number': 3,
         'check_empty_type_number': True,
@@ -258,6 +258,7 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
                     else:
                         components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
                         components_Jac.append([coef_Jac, str_target, strs[i_Jac]])
+                        components_All.append([coef_Lev, coef_Jac, str_target, strs[i_Lev]])
                         continue
 
                 
@@ -283,6 +284,7 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
                                         if coef_Lev > 0.6 or coef_Jac > 0.3:
                                             components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
                                             components_Jac.append([coef_Jac, str_target, strs[i_Jac]])
+                                            components_All.append([coef_Lev, coef_Jac, str_target, strs[i_Lev]])
                                     else:
                                         continue
                             case "C":
@@ -295,14 +297,17 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
                                         if coef_Lev > 0.6 or coef_Jac > 0.3:
                                             components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
                                             components_Jac.append([coef_Jac, str_target, strs[i_Jac]])
+                                            components_All.append([coef_Lev, coef_Jac, str_target, strs[i_Lev]])
                                     else:
                                         continue
 
                     else:
                         if coef_Lev > 0.5:
                             components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
+                            components_All.append([coef_Lev, coef_Jac, str_target, strs[i_Lev]])
                         elif coef_Jac > 0.5:
                             components_Jac.append([coef_Jac, str_target, strs[i_Jac]])
+                            components_All.append([coef_Lev, coef_Jac, str_target, strs[i_Lev]])
 
 
             #     if coef_equ == 1:
@@ -333,21 +338,22 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
 
             components_Lev = sorted(components_Lev, key=lambda x: x[0], reverse=True)
             components_Jac = sorted(components_Jac, key=lambda x: x[0], reverse=True)
+            components_All = sorted(components_All, key=lambda x: x[0], reverse=True)
             # components_All = sorted(components_All, key=lambda x: x[0], reverse=True)
 
             # print(components_Lev)
 
             if result == 0:
                 if options.compare_method == "normal":
-                    if (len(components_Lev) > 0) or (len(components_Jac) > 0):
-                        if components_Lev[0][0] > 0.9 and components_Jac[0][0] > 0.6:
+                    if (len(components_All) > 0):
+                        if components_All[0][0] > 0.9 and components_All[0][0] > 0.6:
                             result = 1
-                            name_in_base = str(components_Lev[0][1])
+                            name_in_base = str(components_All[0][2])
                         else:
-                            if (len(components_Lev) > 0) or (len(components_Jac) > 0):
-                                if components_Lev[0][0] > 0.95:
+                            if (len(components_All) > 0):
+                                if components_All[0][0] > 0.95:
                                     result = 1
-                                    name_in_base = str(components_Lev[0][1])
+                                    name_in_base = str(components_All[0][2])
                                 else:
                                     result = -1
                             else:
@@ -391,7 +397,7 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
         if not(options.quiet_mode):
             if str1 != "" and str1 != " ":
                 if (len(components_Lev) > 0):
-                    lev = components_Lev[0][0]
+                    lev = round(components_Lev[0][0], 2)
                 else:
                     lev = -1
                 st.log(f"target={str1}, result={name_in_base}, c_lev={lev}, status={str(result)}, balance={str(balance)}.", options.log_object)
@@ -570,17 +576,19 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False, op
                 case -2:
                     main_sheet.cell(row=index_bom + options.list_skip_rows + 2, column=i).fill = color_2_fill
 
+    
+
+    ut.set_column_autowidth(main_sheet, [f'{get_column_letter(options.start_custom_column+1)}'])
+    ut.set_column_autowidth(main_sheet, [f'{get_column_letter(options.start_custom_column)}'], 1.1)
+    ut.set_column_autowidth(main_sheet, [f'{get_column_letter(options.start_custom_column+2)}'], 1.1)
+
     if options.widths:
         main_sheet.column_dimensions['F'].width = main_sheet.column_dimensions['G'].width
         main_sheet.column_dimensions['G'].width = main_sheet.column_dimensions['H'].width
         main_sheet.column_dimensions['H'].width = main_sheet.column_dimensions['I'].width
         main_sheet.column_dimensions['I'].width = main_sheet.column_dimensions['J'].width
-        ut.set_column_autowidth(main_sheet, ['J', 'D', 'L'])
+        ut.set_column_autowidth(main_sheet, ['D'])
         main_sheet.column_dimensions['J'].width = main_sheet.column_dimensions['K'].width
-
-    ut.set_column_autowidth(main_sheet, [f'{get_column_letter(options.start_custom_column+1)}'])
-    ut.set_column_autowidth(main_sheet, [f'{get_column_letter(options.start_custom_column)}'], 1.1)
-    ut.set_column_autowidth(main_sheet, [f'{get_column_letter(options.start_custom_column+2)}'], 1.1)
 
     outputname = st.get_name_file(outputname)
 
