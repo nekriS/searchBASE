@@ -612,7 +612,9 @@ def search(name_base, search_line, options, preset_base='BASE_DEFAULT'):
         i += 1
 
         if fnmatch.fnmatch(row['Component'], f"*{search_line}*") or fnmatch.fnmatch(row['Comment'], f"*{search_line}*") or fnmatch.fnmatch(row[header_base[6]], f"*{search_line}*"):
-            output_table = output_table._append(row, ignore_index=True)
+            #output_table = output_table._append(row, ignore_index=True)
+            output_table = pd.concat([output_table, row], axis=1, ignore_index=True)
+
             model = PandasModel(output_table)
             time.sleep(0.2)
             options.log_object.update_table_signal.emit(model)
