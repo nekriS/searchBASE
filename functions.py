@@ -20,6 +20,7 @@ DEFAULT_CONFIG = {
     'LIST_DEFAULT': {
         'view_name': "По умолчанию",
         'list_use_columns': "A, B, C, D, E, F",
+        'unvisible_columns': "",
         'list_skip_rows': 8,
         'list_pn_number': 3,
         'check_empty_type_number': True,
@@ -32,11 +33,14 @@ DEFAULT_CONFIG = {
         'start_custom_column': 11,
         'widths': True,
         'cap_mask': "TYPE-SIZE-DIE-VOL-VALUE TOL",
-        'res_mask': "TYPE-SIZE-VALUE TOL"
+        'res_mask': "TYPE-SIZE-VALUE TOL",
+        'cap_tol': 0.2,
+        'res_tol': 0.05
     },
     'LIST_SDC': {
         'view_name': "SDC",
         'list_use_columns': "A, B, C, E, F, H, M",
+        'unvisible_columns': "D, G, I, J, K, L, M, N, O",
         'list_skip_rows': 0,
         'list_pn_number': 4,
         'check_empty_type_number': False,
@@ -49,7 +53,9 @@ DEFAULT_CONFIG = {
         'start_custom_column': 16,
         'widths': False,
         'cap_mask': "SIZE-DIE-VOL-VALUE TOL",
-        'res_mask': "SIZE-VALUE TOL"
+        'res_mask': "SIZE-VALUE TOL",
+        'cap_tol': 0.2,
+        'res_tol': 0.05
     },
     'BASE_DEFAULT': {
         'view_name': "По умолчанию",
@@ -273,7 +279,7 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
                                         value_err = 1
 
 
-                                    if str1_offmask[1] == str2_offmask[1] and str1_offmask[2] == str2_offmask[2] and (value_err < 0.2):
+                                    if str1_offmask[1] == str2_offmask[1] and str1_offmask[2] == str2_offmask[2] and (value_err < options.res_tol):
                                         if coef_Lev > 0.6 or coef_Jac > 0.3:
                                             components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
                                             components_Jac.append([coef_Jac, str_target, strs[i_Jac]])
@@ -283,13 +289,9 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
                                 str2_offmask = ut.isRLC(str2_1c, options, "TYPE-SIZE-DIE-VOL-VALUE TOL")
                                 if str2_offmask[0] and str2_offmask[1] == "C":
                                     
-                                    print(str1, str2_1c)
-                                    print(str1_offmask, str2_offmask)
                                     value_err = abs((ut.parse_component_value(str1_offmask[5].split(" ")[0]) / ut.parse_component_value(str2_offmask[5].split(" ")[0])) - 1)
-                                    print(value_err)
-                                    
 
-                                    if str1_offmask[1] == str2_offmask[1] and str1_offmask[2] == str2_offmask[2] and str1_offmask[4] <= str2_offmask[4] and (value_err < 0.2):
+                                    if str1_offmask[1] == str2_offmask[1] and str1_offmask[2] == str2_offmask[2] and str1_offmask[4] <= str2_offmask[4] and (value_err < options.cap_tol):
                                         if coef_Lev > 0.6 or coef_Jac > 0.3:
                                             components_Lev.append([coef_Lev, str_target, strs[i_Lev]])
                                             components_Jac.append([coef_Jac, str_target, strs[i_Jac]])
@@ -404,7 +406,15 @@ def find_bom_in_base(name_bom, name_base, options, preset_base='BASE_DEFAULT', p
 
     return bom_table
         
+def hide_columns(sheet, columns):
 
+    for col in columns.replace(" ", "").split(","):
+        if isinstance(col, int):
+            col_letter = get_column_letter(col)
+        else:
+            col_letter = col.upper()
+        
+        sheet.column_dimensions[col_letter].hidden = True
 
 def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False, options=-1, preset_list='LIST_DEFAULT'):
 
@@ -574,6 +584,8 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False, op
 
     outputname = st.get_name_file(outputname)
 
+    hide_columns(main_sheet, options.unvisible_columns)
+
     workbook.save(outputname)
     if open_file:
         try:
@@ -588,9 +600,6 @@ def draw_file(name_bom, bom_table, outputname="output.xlsx", open_file=False, op
     options.log_object.update_bar_signal.emit(100)
 
 def search(name_base, search_line, options, preset_base='BASE_DEFAULT'):
-
-    print(name_base)
-    print(search_line)
     
     start_time = dt.datetime.now()
     base_table = pd.read_html(name_base, encoding='cp1251')[int(options.config[preset_base]['base_table_number'])]

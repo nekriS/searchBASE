@@ -1,5 +1,5 @@
-VERSION = "0.0.4"
-DATE = "20.02.2026"
+VERSION = "0.1.1"
+DATE = "21.02.2026"
 
 # This Python file uses the following encoding: utf-8
 
@@ -24,14 +24,12 @@ import sys
 
 
 def resource_path(relative_path):
-    """Получить абсолютный путь к ресурсу, работоспособный как для скрипта, так и для exe."""
-    try:
-        # PyInstaller создает временную директорию и хранит пути в _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath(".")
-
-    return os.path.join(base_path, relative_path)
+    """Получить абсолютный путь к ресурсу, работает для dev и PyInstaller"""
+    if hasattr(sys, '_MEIPASS'):
+        # Путь во время выполнения EXE
+        return os.path.join(sys._MEIPASS, relative_path)
+    # Путь во время разработки
+    return os.path.join(os.path.abspath("."), relative_path)
 
 
 
@@ -90,7 +88,11 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.ui = Ui_MainWindow()
         icon_path = resource_path("icon.png")
-        self.setWindowIcon(QIcon(icon_path))
+        print(icon_path)
+        my_icon = QIcon()
+        my_icon.addFile(icon_path)
+        self.setWindowIcon(my_icon)
+
         self.ui.setupUi(self)
         self.ui.pushButton.clicked.connect(self.pushButton_clicked)
         self.ui.pushButton2.clicked.connect(self.pushButton2_clicked)
@@ -100,6 +102,7 @@ class MainWindow(QMainWindow):
         self.ui.action.triggered.connect(self.show_about_dialog)
 
         self.setWindowTitle("searchBASE " + VERSION)
+
 
 
         opt = mf.options()

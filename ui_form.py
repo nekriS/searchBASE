@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'form.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.9.1
+## Created by: Qt User Interface Compiler version 6.10.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -27,7 +27,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.setWindowModality(Qt.NonModal)
+        MainWindow.setWindowModality(Qt.WindowModality.NonModal)
         MainWindow.resize(881, 670)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
@@ -36,16 +36,13 @@ class Ui_MainWindow(object):
         MainWindow.setSizePolicy(sizePolicy)
         MainWindow.setMinimumSize(QSize(817, 670))
         MainWindow.setMaximumSize(QSize(16777215, 16777215))
-        icon = QIcon()
-        icon.addFile(u"icon.png", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
-        MainWindow.setWindowIcon(icon)
         MainWindow.setWindowOpacity(1.000000000000000)
         MainWindow.setIconSize(QSize(50, 50))
-        MainWindow.setDockOptions(QMainWindow.AllowTabbedDocks|QMainWindow.AnimatedDocks)
+        MainWindow.setDockOptions(QMainWindow.DockOption.AllowTabbedDocks|QMainWindow.DockOption.AnimatedDocks)
         self.action = QAction(MainWindow)
         self.action.setObjectName(u"action")
-        icon1 = QIcon(QIcon.fromTheme(u"help-about"))
-        self.action.setIcon(icon1)
+        icon = QIcon(QIcon.fromTheme(u"help-about"))
+        self.action.setIcon(icon)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
@@ -53,14 +50,14 @@ class Ui_MainWindow(object):
         self.centralwidget.setMinimumSize(QSize(630, 430))
         self.centralwidget.setMaximumSize(QSize(63000, 43000))
         self.centralwidget.setAcceptDrops(False)
-        self.centralwidget.setLayoutDirection(Qt.LeftToRight)
+        self.centralwidget.setLayoutDirection(Qt.LayoutDirection.LeftToRight)
         self.verticalLayout_2 = QVBoxLayout(self.centralwidget)
         self.verticalLayout_2.setSpacing(6)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
-        self.verticalLayout_2.setSizeConstraint(QLayout.SetMinimumSize)
+        self.verticalLayout_2.setSizeConstraint(QLayout.SizeConstraint.SetMinimumSize)
         self.gridLayout = QGridLayout()
         self.gridLayout.setObjectName(u"gridLayout")
-        self.gridLayout.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.gridLayout.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.gridLayout.setContentsMargins(12, 20, 12, 20)
         self.linePass2 = QLineEdit(self.centralwidget)
         self.linePass2.setObjectName(u"linePass2")
@@ -131,11 +128,11 @@ class Ui_MainWindow(object):
 
         self.tableView = QTableView(self.tab_3)
         self.tableView.setObjectName(u"tableView")
-        self.tableView.setEditTriggers(QAbstractItemView.AnyKeyPressed|QAbstractItemView.CurrentChanged|QAbstractItemView.DoubleClicked|QAbstractItemView.EditKeyPressed)
-        self.tableView.setDefaultDropAction(Qt.CopyAction)
+        self.tableView.setEditTriggers(QAbstractItemView.EditTrigger.AnyKeyPressed|QAbstractItemView.EditTrigger.CurrentChanged|QAbstractItemView.EditTrigger.DoubleClicked|QAbstractItemView.EditTrigger.EditKeyPressed)
+        self.tableView.setDefaultDropAction(Qt.DropAction.CopyAction)
         self.tableView.setAlternatingRowColors(False)
-        self.tableView.setVerticalScrollMode(QAbstractItemView.ScrollPerPixel)
-        self.tableView.setHorizontalScrollMode(QAbstractItemView.ScrollPerPixel)
+        self.tableView.setVerticalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
+        self.tableView.setHorizontalScrollMode(QAbstractItemView.ScrollMode.ScrollPerPixel)
 
         self.gridLayout_2.addWidget(self.tableView, 4, 0, 1, 3)
 
@@ -240,7 +237,7 @@ class Ui_MainWindow(object):
         self.gridLayout_4 = QGridLayout()
         self.gridLayout_4.setSpacing(6)
         self.gridLayout_4.setObjectName(u"gridLayout_4")
-        self.gridLayout_4.setSizeConstraint(QLayout.SetDefaultConstraint)
+        self.gridLayout_4.setSizeConstraint(QLayout.SizeConstraint.SetDefaultConstraint)
         self.gridLayout_4.setContentsMargins(-1, 0, -1, -1)
         self.label_6 = QLabel(self.tab_2)
         self.label_6.setObjectName(u"label_6")
@@ -365,9 +362,9 @@ class Ui_MainWindow(object):
         self.progressBar.setMaximum(100)
         self.progressBar.setValue(0)
         self.progressBar.setTextVisible(False)
-        self.progressBar.setOrientation(Qt.Horizontal)
+        self.progressBar.setOrientation(Qt.Orientation.Horizontal)
         self.progressBar.setInvertedAppearance(False)
-        self.progressBar.setTextDirection(QProgressBar.TopToBottom)
+        self.progressBar.setTextDirection(QProgressBar.Direction.TopToBottom)
 
         self.verticalLayout_2.addWidget(self.progressBar)
 

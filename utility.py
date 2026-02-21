@@ -1,11 +1,29 @@
 
 import Levenshtein
-from sklearn.feature_extraction.text import CountVectorizer
+import re
+from collections import Counter
 
 def jaccard_similarity(vec1, vec2):
     intersection = sum([min(a, b) for a, b in zip(vec1, vec2)])
     union = sum([max(a, b) for a, b in zip(vec1, vec2)])
     return intersection / union if union != 0 else 0
+
+def create_count_vectors(str1, str2):
+    # Токенизация как в CountVectorizer (по не-алфанумерическим символам)
+    token_pattern = r"(?u)\b\w\w+\b"
+    
+    tokens1 = re.findall(token_pattern, str1.lower())
+    tokens2 = re.findall(token_pattern, str2.lower())
+    
+    all_tokens = sorted(set(tokens1 + tokens2))
+    
+    counter1 = Counter(tokens1)
+    counter2 = Counter(tokens2)
+    
+    vec1 = [counter1.get(token, 0) for token in all_tokens]
+    vec2 = [counter2.get(token, 0) for token in all_tokens]
+    
+    return vec1, vec2
 
 def compare(str1="", str2="", method="content", replace_list=[["NPO", "NP0"]], ignore_len=3):
     if len(replace_list) > 0:
@@ -19,8 +37,8 @@ def compare(str1="", str2="", method="content", replace_list=[["NPO", "NP0"]], i
             similarity = 1 - Levenshtein.distance(str1, str2) / max(len(str1), len(str2))
         case 'Jacquard':
             try:
-                vectorizer = CountVectorizer().fit_transform([str1, str2])
-                vectors = vectorizer.toarray()
+                vectors = create_count_vectors(str1, str2)
+                #vectors = vectorizer.toarray()
                 similarity = jaccard_similarity(vectors[0], vectors[1])
             except:
                 similarity = 0
@@ -96,15 +114,11 @@ def isRLC(part_number, options, mask=""):
         cap_mask = mask.split('-')
         res_mask = mask.split('-')
 
-    
-
     type_ = index(split_part_number, cap_mask, "TYPE")
     size_ = index(split_part_number, cap_mask, "SIZE")
     die_ = index(split_part_number, cap_mask, "DIE")
     vol_ = index(split_part_number, cap_mask, "VOL")
     val_ = index(split_part_number, cap_mask, "VALUE TOL")
-
-    #print(type_, size_, die_, vol_, val_)
 
     if type_ == "C" and (is_number(vol_.upper().replace("V",""))) and (die_ in dies):
         return [True, type_, size_, die_, float(vol_.upper().replace("V","")), val_]
